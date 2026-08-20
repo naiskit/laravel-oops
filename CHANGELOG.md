@@ -4,14 +4,7 @@ All notable changes to `laravel-oops` are documented here. The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this
 project follows [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
-
-### Changed
-
-- Renamed the `wise` quote genre from its former Indonesian-only label
-  `bijak`, so genre labels read consistently in English — update
-  `quote_genres` / `OOPS_QUOTE_GENRES` and any published quote files
-  accordingly.
+## [1.0.0] - 2026-08-20
 
 ### Added
 
@@ -42,5 +35,5 @@ project follows [Semantic Versioning](https://semver.org/).
 - `php artisan oops:preview {status=404}` renders a status's page to
   `storage/app/oops-preview-{status}.html` for a quick look in a browser,
   without needing to toggle `APP_DEBUG`/`oops.force` or trigger a real
-  error. Shares its rendering logic with the exception handler via the new
+  error. Shares its rendering logic with the exception handler via
   `Naiskit\LaravelOops\Rendering\ErrorPageComposer`.
