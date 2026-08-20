@@ -1,0 +1,61 @@
+{
+    "name": "naiskit/laravel-oops",
+    "description": "A friendly Laravel error page package that makes unexpected errors a little less frustrating.",
+    "keywords": [
+        "laravel",
+        "error page",
+        "exception handler",
+        "404",
+        "500",
+        "quotes"
+    ],
+    "homepage": "https://github.com/naiskit/laravel-oops",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Naiskit",
+            "homepage": "https://github.com/naiskit"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/naiskit/laravel-oops/issues",
+        "source": "https://github.com/naiskit/laravel-oops"
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0|^13.0",
+        "illuminate/http": "^11.0|^12.0|^13.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0|^10.0|^11.0",
+        "phpunit/phpunit": "^10.5|^11.0",
+        "laravel/pint": "^1.13"
+    },
+    "autoload": {
+        "psr-4": {
+            "Naiskit\\LaravelOops\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Naiskit\\LaravelOops\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Naiskit\\LaravelOops\\LaravelOopsServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

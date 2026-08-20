@@ -1,0 +1,86 @@
+<?php
+
+// 404 — page not found / lost
+
+return [
+    [
+        'text' => 'Not all those who wander are lost.',
+        'author' => 'J.R.R. Tolkien',
+        'source' => 'The Fellowship of the Ring',
+        'lang' => 'en',
+        'genre' => 'wise',
+        'meaning' => 'Suggests that moving without a fixed destination doesn\'t necessarily mean someone is off track.',
+    ],
+    [
+        'text' => 'Still round the corner there may wait a new road or a secret gate.',
+        'author' => 'J.R.R. Tolkien',
+        'source' => 'The Fellowship of the Ring',
+        'lang' => 'en',
+        'genre' => 'wise',
+        'meaning' => 'Implies that an unexpected path can still lead somewhere worthwhile.',
+    ],
+    [
+        'text' => 'Two roads diverged in a wood, and I— I took the one less traveled by.',
+        'author' => 'Robert Frost',
+        'source' => 'The Road Not Taken',
+        'lang' => 'en',
+        'genre' => 'wise',
+        'meaning' => 'Reflects on the outcome of choosing a less common path over the usual one.',
+    ],
+    [
+        'text' => '"Would you tell me, please, which way I ought to go from here?" "That depends a good deal on where you want to get to," said the Cat.',
+        'author' => 'Lewis Carroll',
+        'source' => 'Alice\'s Adventures in Wonderland',
+        'lang' => 'en',
+        'genre' => 'wise',
+        'meaning' => 'Points out that without a clear destination, any direction is technically valid.',
+    ],
+    [
+        'text' => 'I may not have gone where I intended to go, but I think I have ended up where I needed to be.',
+        'author' => 'Douglas Adams',
+        'source' => null,
+        'lang' => 'en',
+        'genre' => 'wise',
+        'meaning' => 'Describes ending up somewhere unplanned but still finding it fitting.',
+    ],
+    [
+        'text' => 'Don\'t panic.',
+        'author' => 'Douglas Adams',
+        'source' => 'The Hitchhiker\'s Guide to the Galaxy',
+        'lang' => 'en',
+        'genre' => 'humor',
+        'meaning' => 'A short reminder to stay calm in an unexpected situation.',
+    ],
+    [
+        'text' => 'Tidak semua yang tersesat itu hilang arah — kadang mereka cuma menemukan jalan lain.',
+        'author' => 'Anonymous',
+        'source' => null,
+        'lang' => 'id',
+        'genre' => 'wise',
+        'meaning' => 'Menjelaskan bahwa berada di luar rencana awal tidak selalu berarti ada yang keliru.',
+    ],
+    [
+        'text' => 'Halamannya lagi jalan-jalan, belum balik-balik.',
+        'author' => 'Anonymous',
+        'source' => null,
+        'lang' => 'id',
+        'genre' => 'humor',
+        'meaning' => 'Cara santai untuk menyampaikan bahwa halaman yang dicari tidak ditemukan.',
+    ],
+    [
+        'text' => 'GPS kami juga bingung, halamannya nggak ketemu.',
+        'author' => 'Anonymous',
+        'source' => null,
+        'lang' => 'id',
+        'genre' => 'humor',
+        'meaning' => 'Menyampaikan pesan halaman tidak ditemukan dengan nada ringan.',
+    ],
+    [
+        'text' => 'Halaman yang Anda cari tidak dapat kami temukan pada sistem ini.',
+        'author' => 'Anonymous',
+        'source' => null,
+        'lang' => 'id',
+        'genre' => 'formal',
+        'meaning' => 'Pemberitahuan resmi bahwa halaman yang diminta tidak tersedia.',
+    ],
+];
