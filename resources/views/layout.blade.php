@@ -13,7 +13,7 @@
     Stacks to a single column below 560px.
 --}}
 <!doctype html>
-<html lang="{{ $locale }}">
+<html lang="{{ $lang }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,37 +25,45 @@
         @endphp
 
         {{--
-            --side-bg always comes from the *light* accent, regardless of
-            the active mode — that value is already a saturated, dark-enough
-            color for white text on top of it. The dark-mode accent is a
-            lighter pastel meant for text/borders on a dark page background,
-            which wouldn't hold contrast as a solid fill behind white text.
-            This keeps the sidebar band a consistent brand color whether the
-            rest of the card is in light or dark mode.
+            --side-bg/--side-text always derive from the *light* accent,
+            regardless of the active mode: --side-bg is a pale tint of it
+            (ErrorPageComposer::mixWithWhite), --side-text is the accent at
+            full strength on top of that tint. The dark-mode accent is a
+            pastel meant for text/borders on a dark page background, not a
+            reliable base for this kind of tint — using it would wash out
+            differently per status. This keeps the sidebar a consistent,
+            soft color-coded panel whether the rest of the card is in light
+            or dark mode.
         --}}
         @if ($themeMode === 'dark')
             :root {
                 color-scheme: dark;
                 {!! $vars($colorsDark) !!}
-                --side-bg: {{ $colorsLight['accent'] }};
+                --side-bg: {{ $sideBg }};
+                --side-text: {{ $sideText }};
             }
         @elseif ($themeMode === 'light')
             :root {
                 color-scheme: light;
                 {!! $vars($colorsLight) !!}
-                --side-bg: {{ $colorsLight['accent'] }};
+                --side-bg: {{ $sideBg }};
+                --side-text: {{ $sideText }};
             }
         @else
             :root {
                 color-scheme: light dark;
                 {!! $vars($colorsLight) !!}
-                --side-bg: {{ $colorsLight['accent'] }};
+                --side-bg: {{ $sideBg }};
+                --side-text: {{ $sideText }};
             }
 
             @media (prefers-color-scheme: dark) {
                 :root {
                     {!! $vars($colorsDark) !!}
                 }
+
+                {{-- The decorative background is light-mode only; drop it once the OS switches to dark. --}}
+                body { background-image: none; }
             }
         @endif
 
@@ -69,18 +77,33 @@
             justify-content: center;
             padding: 24px;
             background: var(--bg);
+            @if ($bgImage && $themeMode !== 'dark')
+                {{-- A faint wash of the status's own accent sits on top of
+                     the decorative image, so the color-coding carries onto
+                     the page background too, not just the sidebar. --}}
+                background-image: linear-gradient({{ $bgOverlay }}, {{ $bgOverlay }}), url('{{ $bgImage }}');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+            @endif
             color: var(--text);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         .card {
             width: 100%;
-            max-width: 680px;
+            max-width: 760px;
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            /* Layered, softly tinted shadow (rather than flat black) so the
+               card reads as floating just above the decorative background
+               instead of sitting on it like a flat cutout. */
+            box-shadow:
+                0 1px 2px rgba(15, 23, 42, 0.04),
+                0 8px 20px -8px rgba(88, 28, 135, 0.08),
+                0 24px 48px -20px rgba(88, 28, 135, 0.10);
         }
 
         .grid {
@@ -90,7 +113,7 @@
 
         .side {
             background: var(--side-bg);
-            color: #ffffff;
+            color: var(--side-text);
             padding: 48px 28px;
             display: flex;
             flex-direction: column;
@@ -113,8 +136,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.16);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: #ffffff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
             margin-bottom: 24px;
             overflow: hidden;
         }
@@ -122,7 +145,7 @@
         .icon-badge svg {
             width: 42px;
             height: 42px;
-            stroke: #ffffff;
+            stroke: var(--side-text);
             fill: none;
             stroke-width: 1.6;
             stroke-linecap: round;
@@ -136,10 +159,18 @@
             margin-bottom: 20px;
         }
 
+        .mascot {
+            display: block;
+            height: 160px;
+            width: auto;
+            max-width: 100%;
+            margin-bottom: 12px;
+        }
+
         .code-big {
             font-size: 64px;
             font-weight: 800;
-            color: #ffffff;
+            color: var(--side-text);
             line-height: 1;
             letter-spacing: -0.02em;
         }
@@ -149,7 +180,8 @@
             font-weight: 600;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.75);
+            color: var(--side-text);
+            opacity: 0.75;
             margin-top: 8px;
         }
 
@@ -158,10 +190,39 @@
             min-width: 0;
         }
 
+        .title-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 0 12px;
+        }
+
+        .title-icon {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            border: 1px solid var(--border);
+        }
+
+        .title-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--accent);
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
         h1 {
             font-size: 24px;
             line-height: 1.3;
-            margin: 0 0 12px;
+            margin: 0;
         }
 
         p.insight {
@@ -265,6 +326,8 @@
             <div class="side {{ $iconAlign === 'center' ? 'align-center' : 'align-left' }}">
                 @if ($logoUrl)
                     <img class="logo-badge" src="{{ $logoUrl }}" width="{{ $logoWidth }}" height="{{ $logoHeight }}" alt="">
+                @elseif ($mascotImage)
+                    <img class="mascot" src="{{ $mascotImage }}" alt="">
                 @else
                     <div class="icon-badge">
                         <svg viewBox="0 0 24 24">{!! $icon !!}</svg>
@@ -274,7 +337,12 @@
                 <div class="code-label">Error</div>
             </div>
             <div class="body">
-                <h1>{{ $title }}</h1>
+                <div class="title-row">
+                    <div class="title-icon">
+                        <svg viewBox="0 0 24 24">{!! $icon !!}</svg>
+                    </div>
+                    <h1>{{ $title }}</h1>
+                </div>
 
                 @if (! empty($insight))
                     <p class="insight">{{ $insight }}</p>

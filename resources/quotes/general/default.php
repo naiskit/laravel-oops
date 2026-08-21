@@ -3,7 +3,15 @@
 // Fallback for any other status code that doesn't have its own group.
 //
 // Every quote below is checked against a primary source (a book, essay,
-// or speech) — no quote aggregators, no "Anonymous".
+// or speech) — exact wording, correct work title, correct attribution,
+// no paraphrase, verifiable source. No quote aggregators, no "Anonymous".
+// Marie Curie's "Nothing in life is to be feared, it is only to be
+// understood" was dropped — even Wikiquote flags its primary source as
+// unconfirmed, tracing only to a secondary biography describing it as
+// something she "often said to reporters," not a written original.
+// Andrea Hirata's dream quote was also dropped — multiple sources quote
+// it with different, inconsistent exact wording, so no single version
+// could be confirmed as the real novel text.
 
 return [
     [
@@ -31,14 +39,6 @@ return [
         'meaning' => 'Failing stings less, in the end, than never having tried at all.',
     ],
     [
-        'text' => 'Nothing in life is to be feared, it is only to be understood.',
-        'author' => 'Marie Curie',
-        'source' => 'as quoted in Madame Curie by Eve Curie (1937)',
-        'lang' => 'en',
-        'genre' => 'wise',
-        'meaning' => 'Whatever this is, it probably makes a lot more sense once it\'s actually looked into.',
-    ],
-    [
         'text' => 'Although the world is full of suffering, it is full also of the overcoming of it.',
         'author' => 'Helen Keller',
         'source' => 'The Open Door (1957)',
@@ -47,27 +47,11 @@ return [
         'meaning' => 'For every bit of trouble here, there\'s usually just as much quiet work already undoing it.',
     ],
     [
-        'text' => 'Bermimpilah, karena Tuhan akan memeluk mimpi-mimpi itu.',
-        'author' => 'Andrea Hirata',
-        'source' => 'Sang Pemimpi (2006)',
-        'lang' => 'id',
-        'genre' => 'wise',
-        'meaning' => 'Mimpi itu tetap layak dipegang, bahkan waktu keadaan belum sesuai rencana.',
-    ],
-    [
         'text' => 'Aku mau hidup seribu tahun lagi.',
         'author' => 'Chairil Anwar',
         'source' => 'puisi "Aku" (1943)',
         'lang' => 'id',
         'genre' => 'wise',
         'meaning' => 'Sekali hidup, rasanya memang ingin terus ada dan terus berkarya.',
-    ],
-    [
-        'text' => 'Gantungkan cita-citamu setinggi langit.',
-        'author' => 'Soekarno',
-        'source' => 'attributed speech, cited in Meluruskan Sejarah Muhammadiyah-NU (Maman A. Majid Binfas)',
-        'lang' => 'id',
-        'genre' => 'formal',
-        'meaning' => 'Cita-cita yang tinggi itu memang pantas digantungkan setinggi langit.',
     ],
 ];

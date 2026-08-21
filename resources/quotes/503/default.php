@@ -3,17 +3,14 @@
 // 503 — under maintenance / a short rest
 //
 // Every quote below is checked against a primary source (a book, essay,
-// or scripture) — no quote aggregators, no "Anonymous".
+// or scripture) — exact wording, correct work title, correct attribution,
+// no paraphrase, verifiable source. No quote aggregators, no "Anonymous".
+// "Adopt the pace of nature: her secret is patience" (Emerson) was dropped
+// from here — widely attributed to him, but no primary-source page or
+// verified original text could be found for it, only repeated
+// quote-database attribution with inconsistent essay citations.
 
 return [
-    [
-        'text' => 'Adopt the pace of nature: her secret is patience.',
-        'author' => 'Ralph Waldo Emerson',
-        'source' => '"Education" (essay)',
-        'lang' => 'en',
-        'genre' => 'wise',
-        'meaning' => 'Even at nature\'s unhurried pace, everything still somehow gets finished.',
-    ],
     [
         'text' => 'To every thing there is a season, and a time to every purpose under heaven.',
         'author' => 'Ecclesiastes',
@@ -39,9 +36,9 @@ return [
         'meaning' => 'Stepping back for a moment tends to put everything else back into perspective.',
     ],
     [
-        'text' => 'It is not that we have a short time to live, but that we waste a lot of it.',
+        'text' => 'It is not that we have a short space of time, but that we waste much of it.',
         'author' => 'Seneca',
-        'source' => 'On the Shortness of Life',
+        'source' => 'On the Shortness of Life (trans. John W. Basore)',
         'lang' => 'en',
         'genre' => 'wise',
         'meaning' => 'Not so much a shortage of time as a moment to spend it a little more carefully.',

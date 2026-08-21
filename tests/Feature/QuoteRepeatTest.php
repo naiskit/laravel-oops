@@ -30,6 +30,9 @@ class QuoteRepeatTest extends TestCase
 
     public function test_the_same_quote_never_shows_twice_in_a_row(): void
     {
+        // "en" specifically: 404's "id" pool has only one verified quote,
+        // which would make this assertion flaky/impossible on its own.
+        config(['oops.lang' => 'en']);
         $this->bindSessionBackedRequest();
 
         $composer = $this->app->make(ErrorPageComposer::class);
@@ -45,6 +48,8 @@ class QuoteRepeatTest extends TestCase
         // Not a strict assertion (random), but proves the exclusion only
         // ever applies to the immediately previous quote, not the whole
         // history — otherwise a small pool would eventually run dry.
+        // "en" specifically: 404's "id" pool has only one verified quote.
+        config(['oops.lang' => 'en']);
         $this->bindSessionBackedRequest();
 
         $composer = $this->app->make(ErrorPageComposer::class);
@@ -61,6 +66,8 @@ class QuoteRepeatTest extends TestCase
 
     public function test_it_falls_back_to_a_repeat_when_the_pool_has_only_one_quote(): void
     {
+        // The fixture quote below is lang "en".
+        config(['oops.lang' => 'en']);
         $this->bindSessionBackedRequest();
 
         $this->app->instance(QuoteRepository::class, new FileQuoteRepository(

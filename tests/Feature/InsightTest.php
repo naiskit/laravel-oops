@@ -24,7 +24,7 @@ class InsightTest extends TestCase
 
     public function test_the_insight_line_follows_the_resolved_locale(): void
     {
-        config(['app.debug' => false, 'oops.locale' => 'en']);
+        config(['app.debug' => false, 'oops.lang' => 'en']);
 
         $response = $this->get('/throw/404');
 

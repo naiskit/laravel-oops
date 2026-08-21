@@ -3,11 +3,16 @@
 // 500 — server error / fail and try again
 //
 // Every quote below is checked against a primary source (a book, essay,
-// speech, or documented commercial script) — no quote aggregators, no
-// "Anonymous". Note: the widely-circulated "Success is not final, failure
-// is not fatal..." (Churchill) is a confirmed false attribution — the
-// International Churchill Society lists it in their "Red Herrings"
-// appendix — so it's gone rather than repeated here.
+// speech, or documented commercial script) — exact wording, correct work
+// title, correct attribution, no paraphrase, verifiable source. No quote
+// aggregators, no "Anonymous". Note: the widely-circulated "Success is
+// not final, failure is not fatal..." (Churchill) is a confirmed false
+// attribution — the International Churchill Society lists it in their
+// "Red Herrings" appendix — so it's gone rather than repeated here. Same
+// for "The wound is the place where the Light enters you" (Rumi) — that's
+// Coleman Barks' interpretive verse translation, not a literal rendering
+// of the Persian, so it doesn't meet the bar here even though the
+// attribution to the right poet/work is otherwise correct.
 
 return [
     [
@@ -19,12 +24,12 @@ return [
         'meaning' => 'Failing again isn\'t the end of the process — it\'s just another lap of it.',
     ],
     [
-        'text' => 'I have not failed. I\'ve just found 10,000 ways that won\'t work.',
+        'text' => 'I have gotten a lot of results! I know several thousand things that won\'t work.',
         'author' => 'Thomas A. Edison',
-        'source' => 'as recorded in Edison: His Life and Inventions (Dyer & Martin, 1910)',
+        'source' => 'as recounted by Walter S. Mallory, in Edison: His Life and Inventions (Dyer & Martin, 1910)',
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Every attempt that didn\'t work still counted for something.',
+        'meaning' => 'Even a long list of things that didn\'t work is still a kind of progress.',
     ],
     [
         'text' => 'The world breaks everyone, and afterward, many are strong at the broken places.',
@@ -45,7 +50,7 @@ return [
     [
         'text' => 'The impediment to action advances action. What stands in the way becomes the way.',
         'author' => 'Marcus Aurelius',
-        'source' => 'Meditations, 5.20',
+        'source' => 'Meditations, 5.20 (trans. Gregory Hays, 2002)',
         'lang' => 'en',
         'genre' => 'wise',
         'meaning' => 'What blocks the way right now might turn out to be the way itself.',
@@ -57,14 +62,6 @@ return [
         'lang' => 'en',
         'genre' => 'wise',
         'meaning' => 'Even this, somehow, might turn out to mean something later.',
-    ],
-    [
-        'text' => 'The wound is the place where the Light enters you.',
-        'author' => 'Rumi',
-        'source' => 'The Essential Rumi (trans. Coleman Barks, 1995), from the Mathnawi',
-        'lang' => 'en',
-        'genre' => 'wise',
-        'meaning' => 'The broken part isn\'t only damage — it\'s also where something new gets in.',
     ],
     [
         'text' => 'Out of suffering have emerged the strongest souls; the most massive characters are seared with scars.',

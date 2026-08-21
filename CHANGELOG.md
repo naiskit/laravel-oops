@@ -55,6 +55,27 @@ project follows [Semantic Versioning](https://semver.org/).
   twice in a row. Falls back to a plain random pick when no session is
   available (an unmatched route never reaches session middleware, or an
   Artisan console context) or when the pool has only one quote.
+- A soft decorative background image behind the card in light mode
+  (`resources/assets/bg-light.jpg`, inlined as a data URI — no extra
+  request, no publish step). `config('oops.theme.background_image')` (or
+  `OOPS_BACKGROUND_IMAGE=false`) turns it off. Never shown in dark mode,
+  forced or OS-triggered, regardless of the setting. It also carries a
+  faint translucent wash of the status's own accent color layered on top
+  (`ErrorPageComposer::hexToRgba()` + a flat-color `linear-gradient`), so
+  the color-coding reads across the whole page background, not just the
+  sidebar.
+- A mascot illustration in the sidebar for 403/404/419/429/500/503 — a
+  small astronaut character matching each status's mood (shrugging for
+  "not found," arms crossed for "access denied," crying for "server
+  error," etc.), inlined the same way as the background image. Takes over
+  the sidebar's icon slot whenever no custom logo is configured (a logo
+  always wins, same as it does over the plain icon). `oops::general` has
+  no mascot of its own. `config('oops.theme.mascot')` (or
+  `OOPS_THEME_MASCOT=false`) turns it off everywhere.
+- The plain icon now also appears in a small badge next to the title in
+  the body column, regardless of whether the sidebar is showing a logo,
+  a mascot, or the icon itself — gives every status page a consistent
+  visual anchor even when the sidebar art changes.
 
 ### Changed
 
@@ -85,48 +106,98 @@ project follows [Semantic Versioning](https://semver.org/).
   to better fill the sidebar column; `oops.theme.logo.width`/`height`
   default from 56 to 76 to match. Only affects installs that never
   configured a logo size of their own.
-- The sidebar is now a solid block filled with the status's own accent
-  color (white icon/code/label on top) instead of matching the page
-  background — reads as an error page at a glance rather than a neutral
-  info card. Widened from a fixed 190px column to a proportional 3fr/5fr
-  grid split (~38% of the card) and the status-code number grew from 40px
-  to 64px to carry the bolder treatment. The fill always uses
-  the *light*-mode accent value, even in dark mode, since that color is
-  saturated enough to hold white text — the dark-mode accent is a lighter
-  tint meant for text/borders on a dark page, not a solid fill.
+- The sidebar is now a soft, pale tint of the status's own accent color
+  (icon/code/label in the full-strength accent on top) instead of matching
+  the page background — reads as a color-coded panel at a glance rather
+  than a neutral info card, without the intensity of a solid saturated
+  fill. Widened from a fixed 190px column to a proportional 3fr/5fr grid
+  split (~38% of the card) and the status-code number grew from 40px to
+  64px to carry the bolder treatment. Both the tint and the text color
+  always derive from the *light*-mode accent value, even in dark mode,
+  since mixing the dark-mode pastel accent toward white would wash out
+  inconsistently per status — the light accent gives a uniformly soft
+  result everywhere (`ErrorPageComposer::mixWithWhite()`).
+- Card grew from 680px to 760px max width to carry the bigger sidebar.
+- Card's shadow is now a layered, softly purple-tinted `box-shadow`
+  (matching the decorative background's own cool lavender tone) instead
+  of a flat `0 1px 3px black` — reads as floating just above the page
+  background rather than a flat cutout pasted on top of it.
 - Rewrote every bundled quote's `meaning` line: previously written as a
   third-person explanation of the quote ("Suggests that...", "Menjelaskan
   bahwa...") — now a short reflection extending the quote's own thought,
   not annotating it from the outside. Wording-only; the `meaning` field's
   shape and behavior are unchanged.
-- Re-curated the entire bundled quote library (all 7 status folders) down
-  to 51 entries, each checked against a primary source (book, essay,
-  speech, or poem) with the author and source cited. Several previously
-  bundled "famous" quotes turned out to be confirmed misattributions and
-  were dropped rather than repeated: "Success is not final, failure is not
-  fatal..." (not Churchill — the International Churchill Society lists it
-  as a false attribution), "The secret of getting ahead is getting
-  started" (not Twain — origin untraceable), "Our greatest glory is not in
-  never falling..." (not Confucius — traced to Oliver Goldsmith),
-  "It does not matter how slowly you go..." (not Confucius — no verified
-  source), "You are braver than you believe..." (not A.A. Milne — written
-  by Carter Crocker for a 1997 Disney film), "By failing to prepare, you
-  are preparing to fail" (not Benjamin Franklin — earliest known use is
-  1919), and "Every wall is a door" (not a verified Emerson line — the
-  closest sourced original is "every wall is a gate," now used instead).
-  New additions include verified lines from Marcus Aurelius, Seneca,
-  Tolstoy, Viktor Frankl, Nelson Mandela, Rumi, Herman Melville, Chairil
-  Anwar, Pramoedya Ananta Toer, Sapardi Djoko Damono, and Ahmad Fuadi,
-  among others. Indonesian-language coverage stays uneven across
-  statuses (403/404/419/429/general each have one or more verified `id`
-  quotes; 500/503 currently have none) — well-sourced Indonesian quotes
-  fitting "server failure" or "under maintenance" specifically proved hard
-  to find without resorting to unattributed internet quote collections,
-  which the sourcing standard above rules out.
+- Re-curated the entire bundled quote library (all 7 status folders), each
+  checked against a primary source (book, essay, speech, or poem) with the
+  author and source cited. Several previously bundled "famous" quotes
+  turned out to be confirmed misattributions and were dropped rather than
+  repeated: "Success is not final, failure is not fatal..." (not Churchill
+  — the International Churchill Society lists it as a false attribution),
+  "The secret of getting ahead is getting started" (not Twain — origin
+  untraceable), "Our greatest glory is not in never falling..." (not
+  Confucius — traced to Oliver Goldsmith), "It does not matter how slowly
+  you go..." (not Confucius — no verified source), "You are braver than
+  you believe..." (not A.A. Milne — written by Carter Crocker for a 1997
+  Disney film), "By failing to prepare, you are preparing to fail" (not
+  Benjamin Franklin — earliest known use is 1919), and "Every wall is a
+  door" (not a verified Emerson line — the closest sourced original is
+  "every wall is a gate," now used instead). New additions include
+  verified lines from Marcus Aurelius, Seneca, Tolstoy, Viktor Frankl,
+  Nelson Mandela, Herman Melville, Chairil Anwar, Pramoedya Ananta Toer,
+  Sapardi Djoko Damono, and Ahmad Fuadi, among others.
+- A second, stricter verification pass on top of the one above — the bar
+  moved from "is this attributed to the right person" to "is this the
+  *exact* published text, from the *exact* named work, and not a
+  paraphrase" (principle: no source, no quote). This caught several
+  quotes that were attributed correctly but worded as a popularly-
+  circulated paraphrase rather than the actual documented text, now
+  corrected to the real wording: Marcus Aurelius's river-of-time line
+  (Meditations IV.43, George Long's translation — the version bundled
+  before didn't match Long's or any other identifiable named
+  translation), Seneca's "short time to live" line (On the Shortness of
+  Life, John W. Basore's translation — "short space of time... waste much
+  of it," not the commonly-repeated "short time to live... waste a lot of
+  it"), and Edison's "10,000 ways" line (the earliest documented version,
+  per Edison: His Life and Inventions, 1910, is "I have gotten a lot of
+  results! I know several thousand things that won't work" — the "I have
+  not failed... 10,000 ways" phrasing is a later, looser popularization).
+  Four quotes were dropped outright for failing the stricter bar: Rumi's
+  "The wound is the place where the Light enters you" (Coleman Barks'
+  interpretive verse translation, not a literal rendering of the Persian
+  — explicitly a paraphrase by the translator's own description), Marie
+  Curie's "Nothing in life is to be feared..." (even Wikiquote flags the
+  primary source as unconfirmed, tracing only to a secondary biography
+  describing it as something she "often said to reporters"), Emerson's
+  "Adopt the pace of nature: her secret is patience" (repeatedly
+  attributed across quote databases with no primary-source page ever
+  found, and inconsistent essay citations between sources), Soekarno's
+  "Gantungkan cita-citamu setinggi langit" (cited only via a secondary
+  book reference that itself says the original speech occasion "sulit
+  ditelusuri," i.e. untraceable), and Andrea Hirata's dream quote from
+  *Sang Pemimpi* (multiple sources quote it with different, mutually
+  inconsistent exact wording, so no version could be confirmed as the
+  real novel text). The library now stands at 45 entries — smaller than
+  the 51 from the previous pass, and below the 50–100 originally
+  requested — because accuracy took priority over hitting a count.
+  Indonesian-language coverage is thinner as a result: `general` now has
+  only one verified `id` quote (Chairil Anwar), and 500/503 still have
+  none.
+- `oops.locale` and `oops.quote_languages` are unified into a single
+  `oops.lang` (`OOPS_LANG` via `.env`) — one language now drives *both*
+  the page's copy and its quote pool. Previously the two were
+  independent by design (a quote could come from a wider language mix
+  than the page's own text); now an `id` page only ever draws from `id`
+  quotes and an `en` page only from `en` ones, with no cross-language
+  fallback. If a status has no quote in the resolved language, the page
+  simply renders without a quote block rather than showing one in the
+  wrong language — 500 and 503 currently have no `id` quote of their own
+  (see above), so an `id`-language visitor won't see a quote on those two
+  specifically until real Indonesian ones are added.
+  `ErrorPageComposer::resolveLocale()` is renamed `resolveLang()`.
 
 ### Removed
 
-- `oops.ui.{locale}.quote_lead` config key — superseded by `insight` above.
+- `oops.ui.{lang}.quote_lead` config key — superseded by `insight` above.
 - Every `'author' => 'Anonymous'` quote, plus the "Peribahasa Indonesia" /
   "Pepatah Programmer" / "Pepatah Internet" placeholder-author entries —
   none of these trace to a real, citable source. Some status/genre/language

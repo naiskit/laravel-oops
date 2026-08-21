@@ -95,8 +95,9 @@ class ThemeTest extends TestCase
         $response = $this->get('/throw/404');
 
         $response->assertSee('src="https://example.com/logo.png"', false);
-        // 404's compass icon SVG path should no longer be rendered.
-        $response->assertDontSee('polygon points="12,7 14,12 12,17 10,12"', false);
+        // The sidebar's icon badge should no longer be rendered — the
+        // title-row icon next to the heading is separate and always shows.
+        $response->assertDontSee('class="icon-badge"', false);
     }
 
     public function test_the_logo_respects_configured_dimensions(): void
@@ -113,14 +114,70 @@ class ThemeTest extends TestCase
         $response->assertSee('width="120" height="40"', false);
     }
 
-    public function test_without_a_logo_the_built_in_icon_is_used(): void
+    public function test_the_title_always_shows_a_small_icon_next_to_it(): void
     {
         config(['app.debug' => false]);
 
         $response = $this->get('/throw/404');
 
-        $response->assertSee('<svg viewBox="0 0 24 24">', false);
-        $response->assertDontSee('<img src=', false);
+        $response->assertSee('class="title-row"', false);
+        $response->assertSee('class="title-icon"', false);
+    }
+
+    public function test_without_a_logo_or_mascot_the_sidebar_uses_the_built_in_icon(): void
+    {
+        config(['app.debug' => false, 'oops.theme.mascot' => false]);
+
+        $response = $this->get('/throw/404');
+
+        $response->assertSee('class="icon-badge"', false);
+        $response->assertDontSee('class="mascot"', false);
+        $response->assertDontSee('<img', false);
+    }
+
+    public function test_without_a_logo_the_mascot_replaces_the_sidebar_icon(): void
+    {
+        config(['app.debug' => false]);
+
+        $response = $this->get('/throw/404');
+
+        $response->assertSee('class="mascot"', false);
+        $response->assertDontSee('class="icon-badge"', false);
+        // The title-row icon is unaffected either way.
+        $response->assertSee('class="title-icon"', false);
+    }
+
+    public function test_the_mascot_can_be_turned_off(): void
+    {
+        config(['app.debug' => false, 'oops.theme.mascot' => false]);
+
+        $response = $this->get('/throw/404');
+
+        $response->assertDontSee('class="mascot"', false);
+        $response->assertSee('class="icon-badge"', false);
+    }
+
+    public function test_a_logo_takes_priority_over_the_mascot(): void
+    {
+        config(['app.debug' => false, 'oops.theme.logo.url' => 'https://example.com/logo.png']);
+
+        $response = $this->get('/throw/404');
+
+        $response->assertSee('class="logo-badge"', false);
+        $response->assertDontSee('class="mascot"', false);
+        $response->assertDontSee('class="icon-badge"', false);
+    }
+
+    public function test_a_status_without_bundled_mascot_art_falls_back_to_the_icon(): void
+    {
+        config(['app.debug' => false, 'oops.statuses' => [404, 418]]);
+
+        // 418 isn't in the default status list, so it falls back to the
+        // "general" view — which has no mascot-general.png of its own.
+        $response = $this->get('/throw/418');
+
+        $response->assertDontSee('class="mascot"', false);
+        $response->assertSee('class="icon-badge"', false);
     }
 
     public function test_the_sidebar_is_centered_by_default(): void

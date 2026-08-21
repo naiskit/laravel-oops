@@ -94,16 +94,19 @@ comes from `config('oops.theme')` via
 seven files, and each status stays free to differ only in icon or,
 eventually, its own layout entirely.
 
-The card itself is a two-column grid: a left sidebar — filled solid with
-the status's own accent color, white icon and code on top — holds the
-icon/logo badge and the status code as a large number, making it read as
-an error page at a glance instead of blending into the body column next to
-it (title/insight/quote/support/button). Below 560px wide the sidebar
+The card itself is a two-column grid: a left sidebar — a soft, pale tint
+of the status's own accent color, with the code number in the
+full-strength accent on top — holds a mascot/logo/icon and the status
+code as a large number, making it read as an error page at a glance
+instead of blending into the body column next to it
+(title/insight/quote/support/button). See [Theme](#theme) for the mascot
+illustrations, colors, dark mode, and logo. Below 560px wide the sidebar
 collapses into a band above the body instead of squeezing into a second
-column. The sidebar's fill always uses the *light-mode* accent value even
-when the card itself is in dark mode — that color is already saturated
-enough to hold white text; the dark-mode accent is a lighter tint meant
-for text/borders on a dark page, not as a solid fill.
+column. Both the tint and its text color always derive from the
+*light-mode* accent value, even when the card itself is in dark mode —
+mixing the dark-mode pastel accent toward white would wash out
+inconsistently per status, so the light accent is used as the base
+regardless of the active mode.
 
 Publishing (`--tag=oops-views`) copies the whole folder — including
 `layout.blade.php` — so you can edit any single status view, or add a
@@ -125,7 +128,7 @@ anymore, since it tended to just restate `insight` in plainer words:
 
 Unlike the quote, this line is guaranteed to fit — it's written specifically
 for that status, not drawn from a pool. It lives right alongside `title` and
-`message` in `config('oops.messages.{locale}.{status}')` as a third key,
+`message` in `config('oops.messages.{lang}.{status}')` as a third key,
 `insight`, so it's locale-aware the same way:
 
 ```php
@@ -142,7 +145,7 @@ for that status, not drawn from a pool. It lives right alongside `title` and
 
 It's optional — leave `insight` out of a status (or the whole array, if
 you override `messages` yourself) and that line simply doesn't render.
-Falls back to `default_message.{locale}.insight` for any status not listed,
+Falls back to `default_message.{lang}.insight` for any status not listed,
 same as `title`/`message`.
 
 ## Quotes matched to the error
@@ -206,24 +209,26 @@ quotes, **just drop a new file into the matching folder** — e.g.
 entries — `index.php` picks it up automatically, no editing required.
 
 Each quote also carries `lang` (`id`/`en`) and `genre` (`wise`, `humor`,
-`formal`, or any label you invent). Control which ones get picked via
-`config/oops.php`:
+`formal`, or any label you invent). The language isn't independently
+configurable — a quote only ever shows in the same language as the rest
+of the page (see [Language](#language) below): an `id` page draws only
+from `id` quotes, an `en` page only from `en` ones, on principle, not just
+by default. If a status has no quote in the resolved language, the page
+simply skips the quote block rather than showing one in the wrong
+language. `genre` is still its own filter:
 
 ```php
-'quote_languages' => ['id', 'en'], // [] = all languages
-'quote_genres' => ['humor'],       // [] = all genres
+'quote_genres' => ['humor'], // [] = all genres
 ```
 
 or via `.env`:
 
 ```
-OOPS_QUOTE_LANGUAGES=id,en
 OOPS_QUOTE_GENRES=humor,wise
 ```
 
-If a status code's quote pool has nothing matching the configured
-language/genre, the filter relaxes step by step (drop genre, then drop
-language) so the page never renders without a quote.
+If a status code's quote pool has nothing matching the configured genre,
+the filter relaxes to ignore genre (language is never relaxed).
 
 This is a deliberately simple starting point — plain files are easy to grow
 by hand for now. Publish with `--tag=oops-quotes` to maintain your own list
@@ -245,7 +250,7 @@ php artisan oops:quote 500 --lang=id --genre=humor
 Below the quote, each status can show a short, practical line telling the
 visitor what to do next — contact an administrator, wait it out, try again.
 It's the `support` key alongside `title`/`message`/`insight` in
-`config('oops.messages.{locale}.{status}')`:
+`config('oops.messages.{lang}.{status}')`:
 
 ```php
 'messages' => [
@@ -286,7 +291,7 @@ skip the token:
 `support` is optional the same way `insight` is — leave it out and the line
 doesn't render, no code is shown (a reference is still generated and logged
 either way, in case you want it for your own purposes via `$reference` on a
-custom view). Falls back to `default_message.{locale}.support` for any
+custom view). Falls back to `default_message.{lang}.support` for any
 status not listed.
 
 ## Footer
@@ -316,32 +321,35 @@ a browser. Unlike triggering a real error, this works regardless of
 `APP_DEBUG` or `oops.force`, so there's no need to toggle either just to look
 at the page.
 
-## Locale
+## Language
 
-The title, insight, support line, and "Back to Home" button follow
-`config('oops.locale')` — separate from the quote language pool above,
-since a quote is picked from a wider mix on purpose, while the page's own
-copy should read as one language. `oops.locale` defaults to `null`, which
-means: follow the app's own `config('app.locale')`, falling back to
-Indonesian if that locale isn't one of the ones translated in
-`config('oops.messages')` (currently `id` and `en`).
+`config('oops.lang')` is the single setting driving *everything* on the
+page in one language — title, insight, support line, "Back to Home"
+button, and the quote (including which quote pool it's drawn from, per
+[Quotes matched to the error](#quotes-matched-to-the-error) above).
+`oops.lang` defaults to `null`, which means: follow the app's own
+`config('app.locale')`, falling back to Indonesian if that locale isn't
+one of the ones translated in `config('oops.messages')` (currently `id`
+and `en`).
 
 ```php
-'locale' => env('OOPS_LOCALE'), // null = follow app.locale, falls back to "id"
+'lang' => env('OOPS_LANG'), // null = follow app.locale, falls back to "id"
 ```
 
 Force one language regardless of the app's locale via `.env`:
 
 ```
-OOPS_LOCALE=en
+OOPS_LANG=en
 ```
 
 `ui` holds the small labels that aren't per-status: `back_home` (the
 button) and `unknown_author` (fallback when a quote has no `author`).
 
 Add another language by adding a new key under `messages`, `default_message`,
-and `ui` in `config/oops.php` (e.g. `'fr' => [...]`), then set `OOPS_LOCALE=fr`
-or switch the app's own locale to `fr`.
+and `ui` in `config/oops.php` (e.g. `'fr' => [...]`), then set `OOPS_LANG=fr`
+or switch the app's own locale to `fr` — and add matching `fr` quotes under
+`resources/quotes/` if you want the quote pool to actually have anything to
+draw from, since quotes are strictly filtered to the same language.
 
 ## Theme
 
@@ -403,6 +411,27 @@ OOPS_LOGO_WIDTH=76
 OOPS_LOGO_HEIGHT=76
 ```
 
+**The sidebar mascot** — 403, 404, 419, 429, 500, and 503 each ship with a
+small illustrated character matching that status's mood (a shrugging
+astronaut for "not found," arms crossed for "access denied," and so on —
+see `resources/assets/mascot-{status}.png`), taking over the sidebar's
+icon slot whenever no logo is configured (a logo always wins, same as it
+does over the plain icon). The plain icon itself never disappears — it
+also appears in its own small badge next to the title in the body column,
+regardless of what the sidebar is showing. `oops::general` has no mascot
+of its own. Turn the mascot off to have the sidebar fall back to the
+plain icon too:
+
+```php
+'theme' => [
+    'mascot' => false,
+],
+```
+
+```
+OOPS_THEME_MASCOT=false
+```
+
 **Left-align the sidebar contents** instead of the default centered
 layout — the icon/logo badge and the large status code both follow this
 alignment; the body column (title, insight, quote, support, button) is
@@ -418,13 +447,35 @@ unaffected either way:
 OOPS_ICON_ALIGN=left
 ```
 
+**Turn off the background image** — by default, a soft decorative image
+(`resources/assets/bg-light.jpg`) covers the page behind the card. It's
+inlined as a data URI, so it renders with zero extra requests and no
+publish step, and it only shows in light mode — a forced or OS-triggered
+dark mode reverts to a flat color automatically:
+
+```php
+'theme' => [
+    'background_image' => false,
+],
+```
+
+```
+OOPS_BACKGROUND_IMAGE=false
+```
+
+The background image also carries a faint wash of the status's own accent
+color on top of it (a translucent `linear-gradient` layered over the
+image), so the color-coding reads across the whole page, not just the
+sidebar strip — turning the image off turns this off too, since there's
+nothing left to layer it onto.
+
 ## Configuration
 
 See [`config/oops.php`](config/oops.php) for all options: turning the
 package off, forcing it on even with `APP_DEBUG=true`, which status codes
 to intercept, the title/message/insight/support copy per status code and
-locale, the quote language/genre filters, the theme (light/dark mode,
-colors, logo, icon alignment), and the footer.
+language, the quote genre filter, the theme (light/dark mode, colors,
+logo, mascot, icon alignment), and the footer.
 
 ## Disabling in tests
 

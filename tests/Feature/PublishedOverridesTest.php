@@ -17,6 +17,8 @@ class PublishedOverridesTest extends TestCase
         config([
             'app.debug' => false,
             'oops.quotes_path' => __DIR__.'/../Fixtures/custom-quotes.php',
+            // The fixture quote is lang "en".
+            'oops.lang' => 'en',
         ]);
 
         $response = $this->get('/throw/404');

@@ -4,7 +4,7 @@ namespace Naiskit\LaravelOops\Tests\Feature;
 
 use Naiskit\LaravelOops\Tests\TestCase;
 
-class LocaleResolutionTest extends TestCase
+class LangResolutionTest extends TestCase
 {
     protected function defineRoutes($router): void
     {
@@ -13,9 +13,9 @@ class LocaleResolutionTest extends TestCase
         });
     }
 
-    public function test_it_follows_the_apps_locale_when_oops_locale_is_not_set(): void
+    public function test_it_follows_the_apps_locale_when_oops_lang_is_not_set(): void
     {
-        config(['app.debug' => false, 'app.locale' => 'en', 'oops.locale' => null]);
+        config(['app.debug' => false, 'app.locale' => 'en', 'oops.lang' => null]);
 
         $response = $this->get('/throw/404');
 
@@ -24,9 +24,9 @@ class LocaleResolutionTest extends TestCase
         $response->assertSee('lang="en"', false);
     }
 
-    public function test_it_prefers_oops_locale_over_the_apps_locale(): void
+    public function test_it_prefers_oops_lang_over_the_apps_locale(): void
     {
-        config(['app.debug' => false, 'app.locale' => 'en', 'oops.locale' => 'id']);
+        config(['app.debug' => false, 'app.locale' => 'en', 'oops.lang' => 'id']);
 
         $response = $this->get('/throw/404');
 
@@ -35,9 +35,9 @@ class LocaleResolutionTest extends TestCase
         $response->assertSee('lang="id"', false);
     }
 
-    public function test_it_falls_back_to_indonesian_for_an_unsupported_locale(): void
+    public function test_it_falls_back_to_indonesian_for_an_unsupported_lang(): void
     {
-        config(['app.debug' => false, 'app.locale' => 'fr', 'oops.locale' => null]);
+        config(['app.debug' => false, 'app.locale' => 'fr', 'oops.lang' => null]);
 
         $response = $this->get('/throw/404');
 

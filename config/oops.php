@@ -19,26 +19,20 @@ return [
     // which status's default accent color applies (see "theme" below).
     'view' => null,
 
-    // Language for the title, message, and "back home" button ("id" or
-    // "en" — see "messages" and "ui" below). Leave null to follow the
-    // app's own locale (config('app.locale')), falling back to "id" if
-    // that locale has no translation here.
-    // Via .env: OOPS_LOCALE=en
-    'locale' => env('OOPS_LOCALE'),
+    // Language for everything on the page — title, message, insight,
+    // support, the "back home" button (see "messages"/"ui" below), and
+    // the quote pool itself (resources/quotes/): an "id" page only draws
+    // from "id" quotes, an "en" page only from "en" ones. Leave null to
+    // follow the app's own locale (config('app.locale')), falling back to
+    // "id" if that locale has no translation here.
+    // Via .env: OOPS_LANG=en
+    'lang' => env('OOPS_LANG'),
 
     // Path to the app's own quote index (result of publishing tag
     // "oops-quotes", which creates a resources/quotes/oops/ folder with
     // index.php + one subfolder per status code). Falls back to the
     // package's bundled quotes when not published.
     'quotes_path' => resource_path('quotes/oops/index.php'),
-
-    // Languages the *quote* (not the title/message above) is allowed to
-    // come from. Fill in either or both: "id", "en". This is a separate,
-    // wider pool than "locale" — e.g. an Indonesian-locale page can still
-    // show an English quote for variety.
-    // Leave empty (empty array) to allow every language.
-    // Via .env: OOPS_QUOTE_LANGUAGES=id,en
-    'quote_languages' => array_values(array_filter(explode(',', env('OOPS_QUOTE_LANGUAGES', 'id,en')))),
 
     // Genres allowed to show up, e.g. "wise", "humor", "formal", or any
     // custom label you tag in the quote files.
@@ -70,7 +64,7 @@ return [
                 'title' => 'Halaman Tidak Ditemukan',
                 'message' => 'Halaman yang kamu cari sepertinya sudah pindah, atau memang tidak pernah ada.',
                 'insight' => 'Tidak semua jalan menuju ke tempat yang kita duga, tapi setiap perjalanan mengajarkan sesuatu.',
-                'support' => 'Jika menurutmu ini sebuah kesalahan, silakan hubungi administrator.',
+                'support' => 'Jika kamu yakin halaman ini seharusnya tersedia, silakan hubungi administrator.',
             ],
             419 => [
                 'title' => 'Sesi Kedaluwarsa',
@@ -88,7 +82,7 @@ return [
                 'title' => 'Ada yang Salah di Server',
                 'message' => 'Bukan salahmu, kok. Tim kami sedang membereskannya.',
                 'insight' => 'Setiap sistem hebat pernah mengalami kegagalan. Yang penting adalah bagaimana ia bangkit kembali.',
-                'support' => 'Jika masalah masih terjadi, hubungi administrator dengan menyertakan kode referensi berikut: {ref}',
+                'support' => 'Jika masalah terus terjadi, silakan hubungi administrator dan sertakan kode referensi berikut: {ref}',
             ],
             503 => [
                 'title' => 'Sedang Pemeliharaan',
@@ -108,7 +102,7 @@ return [
                 'title' => 'Page Not Found',
                 'message' => 'The page you\'re looking for may have moved, or never existed.',
                 'insight' => 'Not every path leads where we expect, but every journey teaches something.',
-                'support' => 'If you think this is a mistake, please contact the administrator.',
+                'support' => 'If you\'re sure this page should exist, please contact the administrator.',
             ],
             419 => [
                 'title' => 'Session Expired',
@@ -126,7 +120,7 @@ return [
                 'title' => 'Something Went Wrong on Our End',
                 'message' => 'Not your fault — our team is already on it.',
                 'insight' => 'Every great system has moments of failure. What matters is how it recovers.',
-                'support' => 'If the problem persists, please contact the administrator with the following reference code: {ref}',
+                'support' => 'If the problem keeps happening, please contact the administrator and include the following reference code: {ref}',
             ],
             503 => [
                 'title' => 'Under Maintenance',
@@ -143,13 +137,13 @@ return [
             'title' => 'Terjadi Kesalahan',
             'message' => 'Ada sesuatu yang tidak berjalan semestinya.',
             'insight' => 'Setiap sistem punya masanya masing-masing — ini pun akan berlalu.',
-            'support' => 'Jika masalah berlanjut, hubungi administrator dengan menyertakan kode referensi berikut: {ref}',
+            'support' => 'Jika masalah terus terjadi, silakan hubungi administrator dan sertakan kode referensi berikut: {ref}',
         ],
         'en' => [
             'title' => 'Something Went Wrong',
             'message' => 'Something didn\'t go as expected.',
             'insight' => 'Every system has its moments — this one will pass too.',
-            'support' => 'If the problem continues, please contact the administrator with the following reference code: {ref}',
+            'support' => 'If the problem keeps happening, please contact the administrator and include the following reference code: {ref}',
         ],
     ],
 
@@ -213,9 +207,22 @@ return [
         // (title, insight, quote, button) is unaffected either way.
         // Via .env: OOPS_ICON_ALIGN=left
         'icon_align' => env('OOPS_ICON_ALIGN', 'center'),
+
+        // A soft decorative background (resources/assets/bg-light.jpg),
+        // inlined as a data URI, covering the page behind the card. Only
+        // applies in light mode. Set to false to go back to a flat color.
+        // Via .env: OOPS_BACKGROUND_IMAGE=false
+        'background_image' => env('OOPS_BACKGROUND_IMAGE', true),
+
+        // A small mascot illustration in the sidebar, matching each
+        // status's mood (resources/assets/mascot-{status}.png) — takes
+        // over the icon slot when a status has art and no custom logo is
+        // configured. Set to false to fall back to the plain icon.
+        // Via .env: OOPS_THEME_MASCOT=false
+        'mascot' => env('OOPS_THEME_MASCOT', true),
     ],
 
-    // A small "Powered by Laravel Oops" line in the footer, linking back
+    // A small "Powered by Naiskit" line in the footer, linking back
     // to the package repo. Turn off for a fully white-labeled page.
     // Via .env: OOPS_SHOW_FOOTER=false
     'show_footer' => env('OOPS_SHOW_FOOTER', true),

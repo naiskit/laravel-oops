@@ -59,8 +59,8 @@ class ErrorPageComposer
      */
     public function compose(int $status): array
     {
-        $locale = $this->resolveLocale();
-        $copy = $this->resolveCopy($locale, $status);
+        $lang = $this->resolveLang();
+        $copy = $this->resolveCopy($lang, $status);
         $view = $this->resolveView($status);
         $reference = $this->generateReference($status);
 
@@ -74,10 +74,10 @@ class ErrorPageComposer
                 'support' => $this->resolveSupport($copy, $reference),
                 'reference' => $reference,
                 'showFooter' => (bool) config('oops.show_footer', true),
-                'locale' => $locale,
-                'backHomeLabel' => config("oops.ui.{$locale}.back_home") ?? config('oops.ui.id.back_home'),
-                'unknownAuthorLabel' => config("oops.ui.{$locale}.unknown_author") ?? config('oops.ui.id.unknown_author'),
-                'quote' => $this->resolveQuote($status),
+                'lang' => $lang,
+                'backHomeLabel' => config("oops.ui.{$lang}.back_home") ?? config('oops.ui.id.back_home'),
+                'unknownAuthorLabel' => config("oops.ui.{$lang}.unknown_author") ?? config('oops.ui.id.unknown_author'),
+                'quote' => $this->resolveQuote($status, $lang),
                 ...$this->resolveTheme($view),
             ],
         ];
@@ -94,18 +94,24 @@ class ErrorPageComposer
         return $this->app->make('view')->exists($view) ? $view : 'oops::general';
     }
 
-    public function resolveLocale(): string
+    /**
+     * The single language driving everything on the page — copy and quotes
+     * alike (see `resolveQuote()`). Falls back to the app's own locale
+     * (`config('app.locale')`), then to "id" if that locale has no
+     * translation here.
+     */
+    public function resolveLang(): string
     {
-        $locale = config('oops.locale') ?: $this->app->getLocale();
+        $lang = config('oops.lang') ?: $this->app->getLocale();
 
-        return array_key_exists($locale, config('oops.messages', [])) ? $locale : 'id';
+        return array_key_exists($lang, config('oops.messages', [])) ? $lang : 'id';
     }
 
-    public function resolveCopy(string $locale, int $status): array
+    public function resolveCopy(string $lang, int $status): array
     {
-        return config("oops.messages.{$locale}.{$status}")
+        return config("oops.messages.{$lang}.{$status}")
             ?? config("oops.messages.id.{$status}")
-            ?? config("oops.default_message.{$locale}")
+            ?? config("oops.default_message.{$lang}")
             ?? config('oops.default_message.id');
     }
 
@@ -136,22 +142,28 @@ class ErrorPageComposer
     }
 
     /**
-     * A random quote for the status, avoiding a back-to-back repeat of the
-     * last one shown to this visitor (tracked in session, keyed per
-     * status) — so refreshing an error page doesn't show the same text
-     * twice in a row. Falls back to a plain random pick when no session is
-     * available (e.g. an unmatched route never reaches session middleware,
-     * or an Artisan console context) or when the pool has only one quote.
+     * A random quote for the status, strictly in $lang — an "id" page never
+     * shows an "en" quote and vice versa. `QuoteRepository::forStatus()`
+     * relaxes its own filters (genre, then language) so it never comes back
+     * empty, which is the right default for the repository as a general
+     * tool, but a wrong-language quote is worse than no quote at all here —
+     * so anything the repository's own relaxation let through in the wrong
+     * language gets discarded rather than shown; the view already skips the
+     * quote block cleanly when there isn't one.
+     *
+     * Also avoids a back-to-back repeat of the last quote shown to this
+     * visitor (tracked in session, keyed per status), so refreshing an
+     * error page doesn't show the same text twice in a row. Falls back to
+     * a plain random pick when no session is available (e.g. an unmatched
+     * route never reaches session middleware, or an Artisan console
+     * context) or when the pool has only one quote.
      *
      * @return array{text: string, author: string, source: ?string, lang: string, genre: string, meaning: ?string}|array{}
      */
-    protected function resolveQuote(int $status): array
+    protected function resolveQuote(int $status, string $lang): array
     {
-        $pool = $this->quotes->forStatus(
-            $status,
-            config('oops.quote_languages', []),
-            config('oops.quote_genres', [])
-        );
+        $pool = $this->quotes->forStatus($status, [$lang], config('oops.quote_genres', []));
+        $pool = array_values(array_filter($pool, fn (array $q) => $q['lang'] === $lang));
 
         if (empty($pool)) {
             return [];
@@ -178,7 +190,7 @@ class ErrorPageComposer
     }
 
     /**
-     * @return array{themeMode: string, colorsLight: array<string, string>, colorsDark: array<string, string>, logoUrl: ?string, logoWidth: int|string, logoHeight: int|string, iconAlign: string}
+     * @return array{themeMode: string, colorsLight: array<string, string>, colorsDark: array<string, string>, logoUrl: ?string, logoWidth: int|string, logoHeight: int|string, iconAlign: string, bgImage: ?string, sideBg: string, sideText: string, mascotImage: ?string, bgOverlay: string}
      */
     protected function resolveTheme(string $view): array
     {
@@ -193,14 +205,31 @@ class ErrorPageComposer
             ? config('oops.theme.mode')
             : 'system';
 
+        $colorsLight = $this->resolveScheme('light', $defaultAccent['light']);
+
         return [
             'themeMode' => $mode,
-            'colorsLight' => $this->resolveScheme('light', $defaultAccent['light']),
+            'colorsLight' => $colorsLight,
             'colorsDark' => $this->resolveScheme('dark', $defaultAccent['dark']),
             'logoUrl' => config('oops.theme.logo.url'),
             'logoWidth' => config('oops.theme.logo.width', 76),
             'logoHeight' => config('oops.theme.logo.height', 76),
             'iconAlign' => config('oops.theme.icon_align') === 'left' ? 'left' : 'center',
+            'bgImage' => $this->resolveBackgroundImage(),
+            // Sidebar fill/text: a soft, pale tint of the status's own
+            // (light-mode) accent as the background, with the full-strength
+            // accent as the text/icon color on top — reads as a gentle
+            // color-coded panel rather than a bold solid block, and always
+            // derived from the light accent so contrast holds in dark mode
+            // too (the dark-mode accent is a pastel meant for text on a
+            // dark page, not reliable as a base for this kind of mixing).
+            'sideBg' => $this->mixWithWhite($colorsLight['accent'], 0.16),
+            'sideText' => $colorsLight['accent'],
+            'mascotImage' => $this->resolveMascot($key),
+            // A faint wash of the status's own accent, layered over the
+            // decorative background image so the color-coding carries onto
+            // the page background too, not just the sidebar.
+            'bgOverlay' => $this->hexToRgba($colorsLight['accent'], 0.04),
         ];
     }
 
@@ -216,5 +245,89 @@ class ErrorPageComposer
             ['accent' => $defaultAccent],
             array_filter($overrides ?? [])
         );
+    }
+
+    /**
+     * Blends a "#rrggbb" color toward white — $ratio is how much of the
+     * original color survives (0.16 means 16% color, 84% white), producing
+     * a pale, soft tint of it rather than a literal lighten/opacity trick.
+     */
+    protected function mixWithWhite(string $hex, float $ratio): string
+    {
+        $hex = ltrim($hex, '#');
+        $mix = fn (int $channel): int => (int) round($channel * $ratio + 255 * (1 - $ratio));
+
+        return sprintf(
+            '#%02x%02x%02x',
+            $mix((int) hexdec(substr($hex, 0, 2))),
+            $mix((int) hexdec(substr($hex, 2, 2))),
+            $mix((int) hexdec(substr($hex, 4, 2)))
+        );
+    }
+
+    /**
+     * Converts a "#rrggbb" color to an "rgba(r, g, b, alpha)" string, for
+     * layering as a translucent color wash (e.g. over the background image)
+     * rather than a fully opaque fill.
+     */
+    protected function hexToRgba(string $hex, float $alpha): string
+    {
+        $hex = ltrim($hex, '#');
+
+        return sprintf(
+            'rgba(%d, %d, %d, %s)',
+            hexdec(substr($hex, 0, 2)),
+            hexdec(substr($hex, 2, 2)),
+            hexdec(substr($hex, 4, 2)),
+            $alpha
+        );
+    }
+
+    /**
+     * A soft decorative background, inlined as a data URI so it renders
+     * with zero extra requests and no publish step — consistent with the
+     * rest of the page (inline CSS, inline SVG icons). Only used in light
+     * mode; view is responsible for not applying it in dark mode. Turn off
+     * entirely via `oops.theme.background_image` / `OOPS_BACKGROUND_IMAGE=false`.
+     */
+    protected function resolveBackgroundImage(): ?string
+    {
+        if (! config('oops.theme.background_image', true)) {
+            return null;
+        }
+
+        $path = __DIR__.'/../../resources/assets/bg-light.jpg';
+
+        if (! is_file($path)) {
+            return null;
+        }
+
+        return 'data:image/jpeg;base64,'.base64_encode(file_get_contents($path));
+    }
+
+    /**
+     * A small mascot illustration matching the status's mood (e.g. a
+     * shrugging astronaut for 404, arms crossed for 403) — takes over the
+     * sidebar's icon slot when a status has one and no custom logo is
+     * configured (a logo always wins, same as it does over the built-in
+     * SVG icon). The plain icon still appears separately, next to the
+     * title in the body column. Only 403/404/419/429/500/503 have art;
+     * "general" falls back to the plain icon in the sidebar too. Inlined
+     * as a data URI, same reasoning as the background image. Turn off via
+     * `oops.theme.mascot` / `OOPS_THEME_MASCOT=false`.
+     */
+    protected function resolveMascot(int|string $key): ?string
+    {
+        if (! config('oops.theme.mascot', true)) {
+            return null;
+        }
+
+        $path = __DIR__."/../../resources/assets/mascot-{$key}.png";
+
+        if (! is_file($path)) {
+            return null;
+        }
+
+        return 'data:image/png;base64,'.base64_encode(file_get_contents($path));
     }
 }
