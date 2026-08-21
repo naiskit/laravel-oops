@@ -27,7 +27,7 @@ class QuoteCommand extends Command
         }
 
         $this->line('"'.$quote['text'].'"');
-        $this->line('— '.($quote['author'] ?? 'Unknown').(! empty($quote['source']) ? ', '.$quote['source'] : ''));
+        $this->line('— '.$quote['author'].(! empty($quote['source']) ? ', '.$quote['source'] : ''));
 
         return self::SUCCESS;
     }

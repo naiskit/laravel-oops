@@ -2,6 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/naiskit/laravel-oops.svg?style=flat-square)](https://packagist.org/packages/naiskit/laravel-oops)
 [![Tests](https://img.shields.io/github/actions/workflow/status/naiskit/laravel-oops/tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/naiskit/laravel-oops/actions/workflows/tests.yml)
+[![codecov](https://img.shields.io/codecov/c/github/naiskit/laravel-oops?style=flat-square)](https://codecov.io/gh/naiskit/laravel-oops)
 [![Total Downloads](https://img.shields.io/packagist/dt/naiskit/laravel-oops.svg?style=flat-square)](https://packagist.org/packages/naiskit/laravel-oops)
 [![License](https://img.shields.io/packagist/l/naiskit/laravel-oops.svg?style=flat-square)](LICENSE.md)
 
@@ -229,29 +230,29 @@ aren't affected by the friendly view.
 ## Testing
 
 This is the package's own test suite (Orchestra Testbench + PHPUnit), for
-anyone working on `laravel-oops` itself rather than just using it:
+anyone working on `laravel-oops` itself rather than just using it. CI runs
+it across PHP 8.2–8.4 and Laravel 11/12/13:
 
 ```bash
 composer install
-composer test
+composer test        # PHPUnit
+composer format       # Laravel Pint (code style)
+composer analyse      # PHPStan / Larastan
 ```
 
-Check code style with [Laravel Pint](https://github.com/laravel/pint):
-
-```bash
-composer format
-```
+`tests/Feature/SecurityTest.php` specifically guards against exception
+details (messages, stack traces, file paths) ever reaching the rendered
+page — see [CONTRIBUTING.md](CONTRIBUTING.md) if you're touching anything
+near exception rendering.
 
 ## Contributing
 
-Issues and pull requests are welcome at
-[naiskit/laravel-oops](https://github.com/naiskit/laravel-oops). Please make
-sure `composer test` and `composer format` both pass before opening a PR.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Security Vulnerabilities
 
-If you discover a security issue, please email
-miftahfirdaus.id@gmail.com instead of opening a public issue.
+Please don't open a public issue for security vulnerabilities — see
+[SECURITY.md](SECURITY.md) for how to report one.
 
 ## Credits
 

@@ -4,6 +4,7 @@ namespace Naiskit\LaravelOops\Tests\Feature;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Routing\Router;
+use Illuminate\Validation\ValidationException;
 use Naiskit\LaravelOops\Tests\TestCase;
 use RuntimeException;
 
@@ -24,6 +25,10 @@ class ExceptionRenderingTest extends TestCase
 
         $router->get('/throw-auth', function () {
             throw new AuthenticationException;
+        });
+
+        $router->post('/throw-validation', function () {
+            throw ValidationException::withMessages(['field' => 'The field is required.']);
         });
     }
 
@@ -80,6 +85,31 @@ class ExceptionRenderingTest extends TestCase
 
         $response->assertStatus(404);
         $response->assertHeader('content-type', 'application/json');
+        $response->assertDontSee('Kembali ke Beranda');
+    }
+
+    public function test_it_intercepts_a_plain_html_request_but_not_a_json_one_for_the_same_route(): void
+    {
+        config(['app.debug' => false]);
+
+        $html = $this->get('/throw/404');
+        $json = $this->withHeaders(['Accept' => 'application/json'])->get('/throw/404');
+
+        $html->assertSee('Kembali ke Beranda');
+        $json->assertHeader('content-type', 'application/json');
+        $json->assertDontSee('Kembali ke Beranda');
+    }
+
+    public function test_it_leaves_validation_exceptions_alone(): void
+    {
+        config(['app.debug' => false]);
+
+        $response = $this->postJson('/throw-validation', []);
+
+        // Native Laravel validation error shape, proving our callback
+        // returned null instead of rendering a friendly page over it.
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('field');
     }
 
     public function test_it_is_disabled_when_app_debug_is_true(): void
@@ -112,6 +142,23 @@ class ExceptionRenderingTest extends TestCase
         // auth handling redirect to the login route, instead of us
         // rendering a friendly page over it.
         $response->assertRedirect('/login');
+    }
+
+    public function test_oops_force_env_var_is_parsed_correctly(): void
+    {
+        // Unlike the config()-array tests above, this exercises the real
+        // env('OOPS_FORCE', false) parsing path — .env values are always
+        // strings, so this proves "true" is actually cast to a boolean.
+        putenv('OOPS_FORCE=true');
+        $this->refreshApplication();
+        config(['app.debug' => true]);
+
+        $response = $this->get('/throw/404');
+
+        $response->assertStatus(404);
+        $response->assertSee('Kembali ke Beranda');
+
+        putenv('OOPS_FORCE');
     }
 
     public function test_it_can_be_disabled_entirely(): void

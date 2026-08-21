@@ -28,9 +28,10 @@
         "illuminate/http": "^11.0|^12.0|^13.0"
     },
     "require-dev": {
+        "larastan/larastan": "^2.9|^3.0",
+        "laravel/pint": "^1.13",
         "orchestra/testbench": "^9.0|^10.0|^11.0",
-        "phpunit/phpunit": "^10.5|^11.0",
-        "laravel/pint": "^1.13"
+        "phpunit/phpunit": "^10.5|^11.0"
     },
     "autoload": {
         "psr-4": {
@@ -51,7 +52,8 @@
     },
     "scripts": {
         "test": "phpunit",
-        "format": "pint"
+        "format": "pint",
+        "analyse": "phpstan analyse --memory-limit=512M"
     },
     "config": {
         "sort-packages": true
