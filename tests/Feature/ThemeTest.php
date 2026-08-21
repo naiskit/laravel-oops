@@ -123,29 +123,30 @@ class ThemeTest extends TestCase
         $response->assertDontSee('<img src=', false);
     }
 
-    public function test_the_icon_is_left_aligned_by_default(): void
+    public function test_the_sidebar_is_centered_by_default(): void
     {
         config(['app.debug' => false]);
 
         $response = $this->get('/throw/404');
 
-        $response->assertDontSee('margin-left:auto;margin-right:auto;', false);
+        $response->assertSee('class="side align-center"', false);
     }
 
-    public function test_icon_align_center_centers_the_built_in_icon(): void
+    public function test_icon_align_left_switches_the_sidebar_to_left_aligned(): void
     {
-        config(['app.debug' => false, 'oops.theme.icon_align' => 'center']);
+        config(['app.debug' => false, 'oops.theme.icon_align' => 'left']);
 
         $response = $this->get('/throw/404');
 
-        $response->assertSee('class="icon-badge" style="margin-left:auto;margin-right:auto;"', false);
+        $response->assertSee('class="side align-left"', false);
+        $response->assertDontSee('class="side align-center"', false);
     }
 
-    public function test_icon_align_center_centers_the_logo_too(): void
+    public function test_icon_align_left_applies_to_the_logo_too(): void
     {
         config([
             'app.debug' => false,
-            'oops.theme.icon_align' => 'center',
+            'oops.theme.icon_align' => 'left',
             'oops.theme.logo.url' => 'https://example.com/logo.png',
         ]);
 
@@ -153,33 +154,25 @@ class ThemeTest extends TestCase
 
         $response->assertSee('src="https://example.com/logo.png"', false);
         $response->assertSee('class="logo-badge"', false);
-        $response->assertSee('margin-left:auto;margin-right:auto;', false);
+        $response->assertSee('class="side align-left"', false);
     }
 
-    public function test_an_invalid_icon_align_falls_back_to_left(): void
+    public function test_an_invalid_icon_align_falls_back_to_center(): void
     {
         config(['app.debug' => false, 'oops.theme.icon_align' => 'right']);
 
         $response = $this->get('/throw/404');
 
-        $response->assertDontSee('margin-left:auto;margin-right:auto;', false);
+        $response->assertSee('class="side align-center"', false);
     }
 
-    public function test_the_error_code_is_left_aligned_alongside_the_icon_by_default(): void
+    public function test_the_sidebar_shows_the_large_status_code(): void
     {
         config(['app.debug' => false]);
 
         $response = $this->get('/throw/404');
 
-        $response->assertSee('<p class="code" style="">Error 404</p>', false);
-    }
-
-    public function test_icon_align_center_also_centers_the_error_code(): void
-    {
-        config(['app.debug' => false, 'oops.theme.icon_align' => 'center']);
-
-        $response = $this->get('/throw/404');
-
-        $response->assertSee('<p class="code" style="text-align:center;">Error 404</p>', false);
+        $response->assertSee('<div class="code-big">404</div>', false);
+        $response->assertSee('<div class="code-label">Error</div>', false);
     }
 }

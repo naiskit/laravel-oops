@@ -200,7 +200,7 @@ class ErrorPageComposer
             'logoUrl' => config('oops.theme.logo.url'),
             'logoWidth' => config('oops.theme.logo.width', 56),
             'logoHeight' => config('oops.theme.logo.height', 56),
-            'iconAlign' => config('oops.theme.icon_align') === 'center' ? 'center' : 'left',
+            'iconAlign' => config('oops.theme.icon_align') === 'left' ? 'left' : 'center',
         ];
     }
 

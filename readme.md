@@ -94,6 +94,12 @@ comes from `config('oops.theme')` via
 seven files, and each status stays free to differ only in icon or,
 eventually, its own layout entirely.
 
+The card itself is a two-column grid: a left sidebar holds the icon/logo
+badge and the status code as a large number, visually separating "this is
+an error page" from the title/insight/quote/support/button in the body
+column next to it. Below 560px wide the sidebar collapses above the body
+instead of squeezing into a second column.
+
 Publishing (`--tag=oops-views`) copies the whole folder — including
 `layout.blade.php` — so you can edit any single status view, or add a
 `{code}.blade.php` for a status not covered by default, without touching
@@ -378,18 +384,19 @@ OOPS_LOGO_WIDTH=56
 OOPS_LOGO_HEIGHT=56
 ```
 
-**Center the icon/logo badge** instead of the default left alignment — the
-`Error {code}` label follows the same alignment as the badge; title,
-insight, quote, and button stay left-aligned either way:
+**Left-align the sidebar contents** instead of the default centered
+layout — the icon/logo badge and the large status code both follow this
+alignment; the body column (title, insight, quote, support, button) is
+unaffected either way:
 
 ```php
 'theme' => [
-    'icon_align' => 'center', // "left" (default) or "center"
+    'icon_align' => 'left', // "center" (default) or "left"
 ],
 ```
 
 ```
-OOPS_ICON_ALIGN=center
+OOPS_ICON_ALIGN=left
 ```
 
 ## Configuration

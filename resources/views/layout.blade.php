@@ -6,6 +6,11 @@
     config('oops.theme'). This file only owns the page chrome (head,
     styles, card structure) so a style tweak doesn't need to be repeated
     in every status file.
+
+    Layout: a left sidebar (icon/logo + a large status code) visually
+    separates "this is an error page" from the description/quote/actions
+    in the body column, so the two don't blend into one continuous block.
+    Stacks to a single column below 560px.
 --}}
 <!doctype html>
 <html lang="{{ $locale }}">
@@ -58,30 +63,53 @@
 
         .card {
             width: 100%;
-            max-width: 560px;
+            max-width: 680px;
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 40px;
+            overflow: hidden;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
         }
 
+        .grid {
+            display: grid;
+            grid-template-columns: 190px 1fr;
+        }
+
+        .side {
+            background: var(--bg);
+            border-right: 1px solid var(--border);
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .side.align-center {
+            align-items: center;
+            text-align: center;
+        }
+
+        .side.align-left {
+            align-items: flex-start;
+            text-align: left;
+        }
+
         .icon-badge {
-            width: 56px;
-            height: 56px;
-            border-radius: 14px;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--bg);
+            background: var(--card);
             border: 1px solid var(--border);
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             overflow: hidden;
         }
 
         .icon-badge svg {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             stroke: var(--accent);
             fill: none;
             stroke-width: 1.6;
@@ -93,20 +121,33 @@
             display: block;
             max-width: 100%;
             height: auto;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
-        .code {
-            font-size: 14px;
+        .code-big {
+            font-size: 40px;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .code-label {
+            font-size: 11px;
             font-weight: 600;
             letter-spacing: 0.08em;
-            color: var(--accent);
             text-transform: uppercase;
-            margin: 0 0 8px;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+
+        .body {
+            padding: 40px;
+            min-width: 0;
         }
 
         h1 {
-            font-size: 28px;
+            font-size: 24px;
             line-height: 1.3;
             margin: 0 0 12px;
         }
@@ -175,7 +216,6 @@
             margin: 32px 0 0;
             padding-top: 20px;
             border-top: 1px solid var(--border);
-            text-align: center;
             font-size: 12px;
             color: var(--muted);
         }
@@ -189,52 +229,72 @@
             color: var(--accent);
             text-decoration: underline;
         }
+
+        @media (max-width: 560px) {
+            .grid {
+                display: block;
+            }
+
+            .side {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                align-items: center;
+                text-align: center;
+                padding: 32px 24px;
+            }
+
+            .body {
+                padding: 32px 24px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="card">
-        @php
-            $badgeStyle = $iconAlign === 'center' ? 'margin-left:auto;margin-right:auto;' : '';
-            $codeStyle = $iconAlign === 'center' ? 'text-align:center;' : '';
-        @endphp
-        @if ($logoUrl)
-            <img class="logo-badge" src="{{ $logoUrl }}" width="{{ $logoWidth }}" height="{{ $logoHeight }}" alt="" style="{{ $badgeStyle }}">
-        @else
-            <div class="icon-badge" style="{{ $badgeStyle }}">
-                <svg viewBox="0 0 24 24">{!! $icon !!}</svg>
-            </div>
-        @endif
-
-        <p class="code" style="{{ $codeStyle }}">Error {{ $code }}</p>
-        <h1>{{ $title }}</h1>
-
-        @if (! empty($insight))
-            <p class="insight">{{ $insight }}</p>
-        @endif
-
-        @if (! empty($quote))
-            <blockquote>
-                <p class="quote-text">&ldquo;{{ $quote['text'] }}&rdquo;</p>
-                <cite>&mdash; {{ $quote['author'] ?? $unknownAuthorLabel }}@if (! empty($quote['source'])), {{ $quote['source'] }}@endif</cite>
-                @if (! empty($quote['meaning']))
-                    <p class="meaning">{{ $quote['meaning'] }}</p>
+        <div class="grid">
+            <div class="side {{ $iconAlign === 'center' ? 'align-center' : 'align-left' }}">
+                @if ($logoUrl)
+                    <img class="logo-badge" src="{{ $logoUrl }}" width="{{ $logoWidth }}" height="{{ $logoHeight }}" alt="">
+                @else
+                    <div class="icon-badge">
+                        <svg viewBox="0 0 24 24">{!! $icon !!}</svg>
+                    </div>
                 @endif
-            </blockquote>
-        @endif
+                <div class="code-big">{{ $code }}</div>
+                <div class="code-label">Error</div>
+            </div>
+            <div class="body">
+                <h1>{{ $title }}</h1>
 
-        @if (! empty($support))
-            <p class="support">{{ $support }}</p>
-        @endif
+                @if (! empty($insight))
+                    <p class="insight">{{ $insight }}</p>
+                @endif
 
-        <div class="actions">
-            <a href="{{ url('/') }}">{{ $backHomeLabel }}</a>
+                @if (! empty($quote))
+                    <blockquote>
+                        <p class="quote-text">&ldquo;{{ $quote['text'] }}&rdquo;</p>
+                        <cite>&mdash; {{ $quote['author'] ?? $unknownAuthorLabel }}@if (! empty($quote['source'])), {{ $quote['source'] }}@endif</cite>
+                        @if (! empty($quote['meaning']))
+                            <p class="meaning">{{ $quote['meaning'] }}</p>
+                        @endif
+                    </blockquote>
+                @endif
+
+                @if (! empty($support))
+                    <p class="support">{{ $support }}</p>
+                @endif
+
+                <div class="actions">
+                    <a href="{{ url('/') }}">{{ $backHomeLabel }}</a>
+                </div>
+
+                @if ($showFooter)
+                    <p class="footer">
+                        <a href="https://github.com/naiskit/laravel-oops" target="_blank" rel="noopener">Powered by Laravel Oops</a>
+                    </p>
+                @endif
+            </div>
         </div>
-
-        @if ($showFooter)
-            <p class="footer">
-                <a href="https://github.com/naiskit/laravel-oops" target="_blank" rel="noopener">Powered by Laravel Oops</a>
-            </p>
-        @endif
     </div>
 </body>
 </html>

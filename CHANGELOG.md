@@ -25,10 +25,10 @@ project follows [Semantic Versioning](https://semver.org/).
   `OOPS_FORCE` env var through its real parsing path, and published
   views/quotes actually being picked up over the bundled ones.
 
-- `config('oops.theme.icon_align')` (`left` default, or `center`) to
-  center the icon/logo badge — the `Error {code}` label follows the same
-  alignment; everything else in the card (title, insight, quote, button)
-  stays left-aligned either way.
+- `config('oops.theme.icon_align')` (`center` default, or `left`) to
+  left-align the sidebar contents — the icon/logo badge and the large
+  status code both follow the same alignment; the body column (title,
+  insight, quote, support, button) is unaffected either way.
 - `insight`: a short, fixed, locale-aware line per status
   (`config('oops.messages.{locale}.{status}.insight')`), shown after the
   title and before the quote. Falls back to `default_message.{locale}.insight`
@@ -58,6 +58,12 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Redesigned the card as a two-column grid: a left sidebar holds the
+  icon/logo badge and the status code shown as a large number, separating
+  "this is an error page" from the title/insight/quote/support/button in
+  the body column next to it. Replaces the old single-column layout where
+  the code was a small line of text above the title. Collapses to a single
+  stacked column below 560px wide.
 - Per-status accent colors moved out of the individual status Blade views
   and into `Naiskit\LaravelOops\Rendering\ErrorPageComposer`, which is what
   makes the new `oops.theme.colors.*.accent` override possible. No visual

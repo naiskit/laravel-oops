@@ -207,12 +207,12 @@ return [
             'height' => env('OOPS_LOGO_HEIGHT', 56),
         ],
 
-        // Horizontal placement of the icon/logo badge: "left" (default)
-        // or "center". The "Error {code}" label follows the same
-        // alignment; everything below it (title, insight, quote, button)
-        // stays left-aligned either way.
-        // Via .env: OOPS_ICON_ALIGN=center
-        'icon_align' => env('OOPS_ICON_ALIGN', 'left'),
+        // Alignment of the sidebar contents (icon/logo + the large status
+        // code) within their own column: "center" (default — reads best
+        // for a badge-like number treatment) or "left". The body column
+        // (title, insight, quote, button) is unaffected either way.
+        // Via .env: OOPS_ICON_ALIGN=left
+        'icon_align' => env('OOPS_ICON_ALIGN', 'center'),
     ],
 
     // A small "Powered by Laravel Oops" line in the footer, linking back
