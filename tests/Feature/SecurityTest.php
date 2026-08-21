@@ -78,6 +78,6 @@ class SecurityTest extends TestCase
         // Positive check to complement the negative ones above: the body
         // is exactly the configured 500 copy, nothing exception-derived.
         $response->assertSee('Ada yang Salah di Server');
-        $response->assertSee('Bukan salahmu, kok. Tim kami sedang membereskannya.');
+        $response->assertSee('Setiap sistem hebat pernah mengalami kegagalan. Yang penting adalah bagaimana ia bangkit kembali.');
     }
 }

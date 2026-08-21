@@ -46,11 +46,16 @@ return [
     // Via .env: OOPS_QUOTE_GENRES=humor,wise
     'quote_genres' => array_values(array_filter(explode(',', env('OOPS_QUOTE_GENRES', '')))),
 
-    // Title, message & insight per status code, per locale. "insight" is a
-    // short, fixed line of its own — calm and reflective rather than
-    // apologetic — shown right before the quote. Unlike the quote (picked
-    // at random from a pool), it's guaranteed to actually fit the
-    // situation, so it doesn't depend on the random pick landing well.
+    // Title, message, insight & support per status code, per locale.
+    // "insight" is a short, fixed line of its own — calm and reflective
+    // rather than apologetic — shown right before the quote. Unlike the
+    // quote (picked at random from a pool), it's guaranteed to actually
+    // fit the situation, so it doesn't depend on the random pick landing
+    // well. "support" is an optional line shown near the bottom, telling
+    // the visitor what to do next (contact an administrator, wait it out,
+    // etc.) — include the literal token "{ref}" anywhere in it to have it
+    // replaced with this render's reference code (see "reference" below);
+    // leave "{ref}" out for statuses that don't need one (e.g. 403, 503).
     // Add or change freely — and add more locales if you need them beyond
     // "id"/"en".
     'messages' => [
@@ -59,31 +64,37 @@ return [
                 'title' => 'Akses Ditolak',
                 'message' => 'Sepertinya kamu tidak punya izin untuk membuka halaman ini.',
                 'insight' => 'Tidak semua pintu diperuntukkan bagi semua orang.',
+                'support' => 'Jika kamu merasa seharusnya memiliki akses, silakan hubungi administrator.',
             ],
             404 => [
                 'title' => 'Halaman Tidak Ditemukan',
                 'message' => 'Halaman yang kamu cari sepertinya sudah pindah, atau memang tidak pernah ada.',
                 'insight' => 'Tidak semua jalan menuju ke tempat yang kita duga, tapi setiap perjalanan mengajarkan sesuatu.',
+                'support' => 'Jika menurutmu ini sebuah kesalahan, silakan hubungi administrator.',
             ],
             419 => [
                 'title' => 'Sesi Kedaluwarsa',
                 'message' => 'Halaman ini sudah terlalu lama dibuka. Coba muat ulang, ya.',
                 'insight' => 'Jeda sebentar bisa menyegarkan perjalanan. Silakan coba lagi.',
+                'support' => 'Coba muat ulang halaman. Jika masalah berlanjut, hubungi administrator.',
             ],
             429 => [
                 'title' => 'Terlalu Banyak Percobaan',
                 'message' => 'Pelan-pelan saja. Tarik napas sebentar, lalu coba lagi.',
                 'insight' => 'Sistem sehebat apa pun tetap butuh waktu untuk bernapas.',
+                'support' => 'Tunggu sebentar sebelum mencoba lagi. Jika masalah berlanjut, hubungi administrator.',
             ],
             500 => [
                 'title' => 'Ada yang Salah di Server',
                 'message' => 'Bukan salahmu, kok. Tim kami sedang membereskannya.',
                 'insight' => 'Setiap sistem hebat pernah mengalami kegagalan. Yang penting adalah bagaimana ia bangkit kembali.',
+                'support' => 'Jika masalah masih terjadi, hubungi administrator dengan menyertakan kode referensi berikut: {ref}',
             ],
             503 => [
                 'title' => 'Sedang Pemeliharaan',
                 'message' => 'Kami sedang melakukan sedikit perbaikan. Sebentar lagi kembali normal.',
                 'insight' => 'Sistem yang baik juga butuh waktu untuk berkembang dan menjadi lebih baik.',
+                'support' => 'Perkiraan layanan kembali tersedia akan diinformasikan oleh administrator.',
             ],
         ],
         'en' => [
@@ -91,31 +102,37 @@ return [
                 'title' => 'Access Denied',
                 'message' => 'Looks like you don\'t have permission to open this page.',
                 'insight' => 'Not every door is meant to be opened by everyone.',
+                'support' => 'If you believe you should have access, please contact the administrator.',
             ],
             404 => [
                 'title' => 'Page Not Found',
                 'message' => 'The page you\'re looking for may have moved, or never existed.',
                 'insight' => 'Not every path leads where we expect, but every journey teaches something.',
+                'support' => 'If you think this is a mistake, please contact the administrator.',
             ],
             419 => [
                 'title' => 'Session Expired',
                 'message' => 'This page has been open for a while. Try refreshing it.',
                 'insight' => 'A little pause can reset the journey. Please try again.',
+                'support' => 'Try reloading the page. If the problem continues, contact the administrator.',
             ],
             429 => [
                 'title' => 'Too Many Attempts',
                 'message' => 'Slow down for a moment, then try again.',
                 'insight' => 'Even great systems need a moment to breathe.',
+                'support' => 'Please wait a moment before trying again. If the problem continues, contact the administrator.',
             ],
             500 => [
                 'title' => 'Something Went Wrong on Our End',
                 'message' => 'Not your fault — our team is already on it.',
                 'insight' => 'Every great system has moments of failure. What matters is how it recovers.',
+                'support' => 'If the problem persists, please contact the administrator with the following reference code: {ref}',
             ],
             503 => [
                 'title' => 'Under Maintenance',
                 'message' => 'We\'re making a few improvements. Back to normal shortly.',
                 'insight' => 'Great systems also need time to improve and grow.',
+                'support' => 'The administrator will announce when the service is expected to be back.',
             ],
         ],
     ],
@@ -126,11 +143,13 @@ return [
             'title' => 'Terjadi Kesalahan',
             'message' => 'Ada sesuatu yang tidak berjalan semestinya.',
             'insight' => 'Setiap sistem punya masanya masing-masing — ini pun akan berlalu.',
+            'support' => 'Jika masalah berlanjut, hubungi administrator dengan menyertakan kode referensi berikut: {ref}',
         ],
         'en' => [
             'title' => 'Something Went Wrong',
             'message' => 'Something didn\'t go as expected.',
             'insight' => 'Every system has its moments — this one will pass too.',
+            'support' => 'If the problem continues, please contact the administrator with the following reference code: {ref}',
         ],
     ],
 
@@ -189,10 +208,16 @@ return [
         ],
 
         // Horizontal placement of the icon/logo badge: "left" (default)
-        // or "center". Everything below it (title, message, quote,
-        // button) stays left-aligned either way.
+        // or "center". The "Error {code}" label follows the same
+        // alignment; everything below it (title, insight, quote, button)
+        // stays left-aligned either way.
         // Via .env: OOPS_ICON_ALIGN=center
         'icon_align' => env('OOPS_ICON_ALIGN', 'left'),
     ],
+
+    // A small "Powered by Laravel Oops" line in the footer, linking back
+    // to the package repo. Turn off for a fully white-labeled page.
+    // Via .env: OOPS_SHOW_FOOTER=false
+    'show_footer' => env('OOPS_SHOW_FOOTER', true),
 
 ];

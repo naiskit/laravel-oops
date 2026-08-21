@@ -26,12 +26,35 @@ project follows [Semantic Versioning](https://semver.org/).
   views/quotes actually being picked up over the bundled ones.
 
 - `config('oops.theme.icon_align')` (`left` default, or `center`) to
-  center the icon/logo badge — everything else in the card (title,
-  message, quote, button) stays left-aligned either way.
+  center the icon/logo badge — the `Error {code}` label follows the same
+  alignment; everything else in the card (title, insight, quote, button)
+  stays left-aligned either way.
 - `insight`: a short, fixed, locale-aware line per status
   (`config('oops.messages.{locale}.{status}.insight')`), shown after the
-  message and before the quote. Falls back to `default_message.{locale}.insight`
+  title and before the quote. Falls back to `default_message.{locale}.insight`
   for an unlisted status, same as `title`/`message`.
+- `support`: an optional, locale-aware line per status
+  (`config('oops.messages.{locale}.{status}.support')`), shown below the
+  quote to tell the visitor what to do next (contact an administrator,
+  wait it out, try again). Include the literal token `{ref}` anywhere in
+  it to have it replaced with a short reference code unique to that
+  render (e.g. `OOPS-500-A82F`); leave it out for statuses that don't need
+  one. Falls back to `default_message.{locale}.support` for an unlisted
+  status.
+- Every rendered error page now generates a reference code and logs it
+  alongside the real exception (message, class, and stack trace) — `5xx`
+  logs at `error`, everything else at `warning` — so a code a visitor
+  reports back can be traced to the actual failure. The same code is what
+  `{ref}` in `support` copy resolves to.
+- A "Powered by Laravel Oops" footer linking back to this repo, shown by
+  default under the button. `config('oops.show_footer')` (or
+  `OOPS_SHOW_FOOTER=false`) turns it off for a white-labeled page.
+- The random quote no longer repeats itself back-to-back: the last quote
+  shown to a visitor is tracked in session (per status) and excluded from
+  the next pick, so refreshing an error page doesn't show the same text
+  twice in a row. Falls back to a plain random pick when no session is
+  available (an unmatched route never reaches session middleware, or an
+  Artisan console context) or when the pool has only one quote.
 
 ### Changed
 
@@ -48,6 +71,10 @@ project follows [Semantic Versioning](https://semver.org/).
   `width`/`height` instead of forcing a fixed 56×56 square — a non-square
   logo (e.g. a wide wordmark) used to get squished to fit both dimensions;
   it now renders at its intended size.
+- `message` is no longer rendered by the built-in views — shown right next
+  to `insight`, the two nearly always read as saying the same thing twice.
+  `message` still exists in config and is passed to the view (for anyone
+  overriding it), it's just not part of the default layout anymore.
 
 ### Removed
 

@@ -105,11 +105,11 @@ accent applies (see [Theme](#theme)).
 
 The quote below is picked at random from a pool, so it won't always land
 perfectly for the situation. Each status also gets a short, **fixed** line —
-calm and reflective rather than apologetic — shown right after the message
-and before the quote:
+calm and reflective rather than apologetic — shown right under the title and
+before the quote. `message` still exists in config (and is passed to the
+view, for anyone overriding it) but isn't rendered by the built-in views
+anymore, since it tended to just restate `insight` in plainer words:
 
-> Halaman yang kamu cari sepertinya sudah pindah, atau memang tidak pernah ada.
->
 > *Tidak semua jalan menuju ke tempat yang kita duga, tapi setiap perjalanan mengajarkan sesuatu.*
 
 Unlike the quote, this line is guaranteed to fit — it's written specifically
@@ -215,6 +215,68 @@ php artisan oops:quote 404
 php artisan oops:quote 500 --lang=id --genre=humor
 ```
 
+## Support line & reference code
+
+Below the quote, each status can show a short, practical line telling the
+visitor what to do next — contact an administrator, wait it out, try again.
+It's the `support` key alongside `title`/`message`/`insight` in
+`config('oops.messages.{locale}.{status}')`:
+
+```php
+'messages' => [
+    'id' => [
+        500 => [
+            'title' => 'Ada yang Salah di Server',
+            // ...
+            'support' => 'Jika masalah masih terjadi, hubungi administrator dengan menyertakan kode referensi berikut: {ref}',
+        ],
+    ],
+],
+```
+
+The literal token `{ref}` gets replaced with a short reference code unique to
+that render — e.g. `OOPS-500-A82F` — so a visitor can hand that code to
+whoever's on the other end. Every render also logs a line carrying the same
+code alongside the real exception and its stack trace:
+
+```
+[OOPS-500-A82F] RuntimeException: Call to undefined method ...
+```
+
+so a reported code can be traced straight back to what actually happened —
+`5xx` statuses log at `error`, everything else (`403`/`404`/`419`/`429` —
+expected, user-driven outcomes rather than bugs) logs at `warning`.
+
+Not every status needs `{ref}` — a 503 you're already aware of (a
+maintenance window, say) doesn't need one, so its `support` copy can just
+skip the token:
+
+```php
+503 => [
+    // ...
+    'support' => 'Perkiraan layanan kembali tersedia akan diinformasikan oleh administrator.',
+],
+```
+
+`support` is optional the same way `insight` is — leave it out and the line
+doesn't render, no code is shown (a reference is still generated and logged
+either way, in case you want it for your own purposes via `$reference` on a
+custom view). Falls back to `default_message.{locale}.support` for any
+status not listed.
+
+## Footer
+
+A small "Powered by Laravel Oops" line, linking back to this repo, sits
+under the button by default. Turn it off for a fully white-labeled page:
+
+```php
+'show_footer' => false,
+```
+
+```
+OOPS_SHOW_FOOTER=false
+```
+
 ## Previewing the page
 
 ```bash
@@ -231,13 +293,13 @@ at the page.
 
 ## Locale
 
-The title, message, and "Back to Home" button follow `config('oops.locale')`
-— separate from the quote language pool above, since a quote is picked from
-a wider mix on purpose, while the page's own copy should read as one
-language. `oops.locale` defaults to `null`, which means: follow the app's
-own `config('app.locale')`, falling back to Indonesian if that locale isn't
-one of the ones translated in `config('oops.messages')` (currently `id` and
-`en`).
+The title, insight, support line, and "Back to Home" button follow
+`config('oops.locale')` — separate from the quote language pool above,
+since a quote is picked from a wider mix on purpose, while the page's own
+copy should read as one language. `oops.locale` defaults to `null`, which
+means: follow the app's own `config('app.locale')`, falling back to
+Indonesian if that locale isn't one of the ones translated in
+`config('oops.messages')` (currently `id` and `en`).
 
 ```php
 'locale' => env('OOPS_LOCALE'), // null = follow app.locale, falls back to "id"
@@ -316,8 +378,9 @@ OOPS_LOGO_WIDTH=56
 OOPS_LOGO_HEIGHT=56
 ```
 
-**Center the icon/logo badge** instead of the default left alignment —
-title, message, insight, quote, and button stay left-aligned either way:
+**Center the icon/logo badge** instead of the default left alignment — the
+`Error {code}` label follows the same alignment as the badge; title,
+insight, quote, and button stay left-aligned either way:
 
 ```php
 'theme' => [
@@ -333,9 +396,9 @@ OOPS_ICON_ALIGN=center
 
 See [`config/oops.php`](config/oops.php) for all options: turning the
 package off, forcing it on even with `APP_DEBUG=true`, which status codes
-to intercept, the title/message/insight per status code and locale, the
-quote language/genre filters, and the theme (light/dark mode, colors,
-logo, icon alignment).
+to intercept, the title/message/insight/support copy per status code and
+locale, the quote language/genre filters, the theme (light/dark mode,
+colors, logo, icon alignment), and the footer.
 
 ## Disabling in tests
 

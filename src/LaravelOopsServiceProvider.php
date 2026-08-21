@@ -5,6 +5,7 @@ namespace Naiskit\LaravelOops;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\ValidationException;
 use Naiskit\LaravelOops\Console\PreviewCommand;
@@ -86,7 +87,28 @@ class LaravelOopsServiceProvider extends ServiceProvider
 
         ['view' => $view, 'data' => $data] = $this->app->make(ErrorPageComposer::class)->compose($status);
 
+        $this->logReference($e, $status, $data['reference']);
+
         return response()->view($view, $data, $status, $e instanceof HttpExceptionInterface ? $e->getHeaders() : []);
+    }
+
+    /**
+     * Logs a line carrying the same reference code shown to the visitor
+     * (via "support" copy's "{ref}" token), so a code reported by a user
+     * can be traced back to the actual exception and its stack trace.
+     * 5xx logs at "error"; everything else (403/404/419/429 — expected,
+     * user-driven outcomes rather than bugs) logs at "warning" to avoid
+     * flooding error-level logs with routine traffic.
+     */
+    protected function logReference(Throwable $e, int $status, string $reference): void
+    {
+        $level = $status >= 500 ? 'error' : 'warning';
+
+        Log::{$level}("[{$reference}] ".get_class($e).': '.$e->getMessage(), [
+            'oops_reference' => $reference,
+            'status' => $status,
+            'exception' => $e,
+        ]);
     }
 
     protected function shouldSkip(Throwable $e, $request): bool

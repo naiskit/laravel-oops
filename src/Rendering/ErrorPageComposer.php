@@ -62,6 +62,7 @@ class ErrorPageComposer
         $locale = $this->resolveLocale();
         $copy = $this->resolveCopy($locale, $status);
         $view = $this->resolveView($status);
+        $reference = $this->generateReference($status);
 
         return [
             'view' => $view,
@@ -70,14 +71,13 @@ class ErrorPageComposer
                 'title' => $copy['title'],
                 'message' => $copy['message'],
                 'insight' => $copy['insight'] ?? null,
+                'support' => $this->resolveSupport($copy, $reference),
+                'reference' => $reference,
+                'showFooter' => (bool) config('oops.show_footer', true),
                 'locale' => $locale,
                 'backHomeLabel' => config("oops.ui.{$locale}.back_home") ?? config('oops.ui.id.back_home'),
                 'unknownAuthorLabel' => config("oops.ui.{$locale}.unknown_author") ?? config('oops.ui.id.unknown_author'),
-                'quote' => $this->quotes->random(
-                    $status,
-                    config('oops.quote_languages', []),
-                    config('oops.quote_genres', [])
-                ),
+                'quote' => $this->resolveQuote($status),
                 ...$this->resolveTheme($view),
             ],
         ];
@@ -107,6 +107,74 @@ class ErrorPageComposer
             ?? config("oops.messages.id.{$status}")
             ?? config("oops.default_message.{$locale}")
             ?? config('oops.default_message.id');
+    }
+
+    /**
+     * A short, human-shareable code identifying this particular render
+     * (e.g. "OOPS-500-A82F") — shown to the visitor via the "{ref}" token
+     * in "support" copy, and logged by LaravelOopsServiceProvider
+     * alongside the real exception, so a reported code can be traced back
+     * to the matching log entry.
+     */
+    public function generateReference(int $status): string
+    {
+        return sprintf('OOPS-%d-%s', $status, strtoupper(bin2hex(random_bytes(2))));
+    }
+
+    /**
+     * The "support" line for this status/locale, with "{ref}" replaced by
+     * the render's reference code. Returns null when the resolved copy
+     * has no "support" entry — the view simply skips the line then.
+     */
+    protected function resolveSupport(array $copy, string $reference): ?string
+    {
+        if (empty($copy['support'])) {
+            return null;
+        }
+
+        return str_replace('{ref}', $reference, $copy['support']);
+    }
+
+    /**
+     * A random quote for the status, avoiding a back-to-back repeat of the
+     * last one shown to this visitor (tracked in session, keyed per
+     * status) — so refreshing an error page doesn't show the same text
+     * twice in a row. Falls back to a plain random pick when no session is
+     * available (e.g. an unmatched route never reaches session middleware,
+     * or an Artisan console context) or when the pool has only one quote.
+     *
+     * @return array{text: string, author: string, source: ?string, lang: string, genre: string, meaning: ?string}|array{}
+     */
+    protected function resolveQuote(int $status): array
+    {
+        $pool = $this->quotes->forStatus(
+            $status,
+            config('oops.quote_languages', []),
+            config('oops.quote_genres', [])
+        );
+
+        if (empty($pool)) {
+            return [];
+        }
+
+        $request = $this->app->bound('request') ? $this->app->make('request') : null;
+        $session = $request && $request->hasSession() ? $request->session() : null;
+        $key = "oops.last_quote.{$status}";
+        $last = $session?->get($key);
+
+        $candidates = count($pool) > 1
+            ? array_values(array_filter($pool, fn (array $q) => $q['text'] !== $last))
+            : $pool;
+
+        if (empty($candidates)) {
+            $candidates = $pool;
+        }
+
+        $quote = $candidates[array_rand($candidates)];
+
+        $session?->put($key, $quote['text']);
+
+        return $quote;
     }
 
     /**

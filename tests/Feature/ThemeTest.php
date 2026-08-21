@@ -164,4 +164,22 @@ class ThemeTest extends TestCase
 
         $response->assertDontSee('margin-left:auto;margin-right:auto;', false);
     }
+
+    public function test_the_error_code_is_left_aligned_alongside_the_icon_by_default(): void
+    {
+        config(['app.debug' => false]);
+
+        $response = $this->get('/throw/404');
+
+        $response->assertSee('<p class="code" style="">Error 404</p>', false);
+    }
+
+    public function test_icon_align_center_also_centers_the_error_code(): void
+    {
+        config(['app.debug' => false, 'oops.theme.icon_align' => 'center']);
+
+        $response = $this->get('/throw/404');
+
+        $response->assertSee('<p class="code" style="text-align:center;">Error 404</p>', false);
+    }
 }

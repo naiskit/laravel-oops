@@ -111,13 +111,6 @@
             margin: 0 0 12px;
         }
 
-        p.message {
-            color: var(--muted);
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 0 0 32px;
-        }
-
         p.insight {
             font-style: italic;
             color: var(--text);
@@ -156,6 +149,17 @@
             color: var(--muted);
         }
 
+        p.support {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin: 0 0 32px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--muted);
+        }
+
         .actions a {
             display: inline-block;
             padding: 10px 20px;
@@ -166,12 +170,32 @@
             font-size: 14px;
             font-weight: 600;
         }
+
+        .footer {
+            margin: 32px 0 0;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .footer a {
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="card">
         @php
             $badgeStyle = $iconAlign === 'center' ? 'margin-left:auto;margin-right:auto;' : '';
+            $codeStyle = $iconAlign === 'center' ? 'text-align:center;' : '';
         @endphp
         @if ($logoUrl)
             <img class="logo-badge" src="{{ $logoUrl }}" width="{{ $logoWidth }}" height="{{ $logoHeight }}" alt="" style="{{ $badgeStyle }}">
@@ -181,9 +205,8 @@
             </div>
         @endif
 
-        <p class="code">Error {{ $code }}</p>
+        <p class="code" style="{{ $codeStyle }}">Error {{ $code }}</p>
         <h1>{{ $title }}</h1>
-        <p class="message">{{ $message }}</p>
 
         @if (! empty($insight))
             <p class="insight">{{ $insight }}</p>
@@ -199,9 +222,19 @@
             </blockquote>
         @endif
 
+        @if (! empty($support))
+            <p class="support">{{ $support }}</p>
+        @endif
+
         <div class="actions">
             <a href="{{ url('/') }}">{{ $backHomeLabel }}</a>
         </div>
+
+        @if ($showFooter)
+            <p class="footer">
+                <a href="https://github.com/naiskit/laravel-oops" target="_blank" rel="noopener">Powered by Laravel Oops</a>
+            </p>
+        @endif
     </div>
 </body>
 </html>

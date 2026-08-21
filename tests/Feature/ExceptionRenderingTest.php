@@ -160,6 +160,16 @@ class ExceptionRenderingTest extends TestCase
         putenv('OOPS_FORCE');
     }
 
+    public function test_it_does_not_render_the_message_line_since_the_insight_line_already_covers_it(): void
+    {
+        config(['app.debug' => false]);
+
+        $response = $this->get('/throw/404');
+
+        $response->assertDontSee('class="message"', false);
+        $response->assertDontSee('Halaman yang kamu cari sepertinya sudah pindah, atau memang tidak pernah ada.');
+    }
+
     public function test_it_can_be_disabled_entirely(): void
     {
         config(['app.debug' => false]);

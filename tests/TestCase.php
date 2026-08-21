@@ -20,5 +20,9 @@ abstract class TestCase extends Orchestra
         // a predictable default here. LocaleResolutionTest overrides this
         // per test to exercise the actual id/en resolution logic.
         $app['config']->set('oops.locale', 'id');
+
+        // Every rendered error page now logs a reference line — keep the
+        // suite from writing to a real log file on every test run.
+        $app['config']->set('logging.default', 'null');
     }
 }
