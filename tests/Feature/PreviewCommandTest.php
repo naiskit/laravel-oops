@@ -28,7 +28,6 @@ class PreviewCommandTest extends TestCase
 
         $this->assertFileExists($path);
         $this->assertStringContainsString('Halaman Tidak Ditemukan', file_get_contents($path));
-        $this->assertStringContainsString('Sambil menunggu, ini buat kamu:', file_get_contents($path));
     }
 
     public function test_it_defaults_to_status_404(): void

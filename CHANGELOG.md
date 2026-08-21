@@ -25,6 +25,14 @@ project follows [Semantic Versioning](https://semver.org/).
   `OOPS_FORCE` env var through its real parsing path, and published
   views/quotes actually being picked up over the bundled ones.
 
+- `config('oops.theme.icon_align')` (`left` default, or `center`) to
+  center the icon/logo badge — everything else in the card (title,
+  message, quote, button) stays left-aligned either way.
+- `insight`: a short, fixed, locale-aware line per status
+  (`config('oops.messages.{locale}.{status}.insight')`), shown after the
+  message and before the quote. Falls back to `default_message.{locale}.insight`
+  for an unlisted status, same as `title`/`message`.
+
 ### Changed
 
 - Per-status accent colors moved out of the individual status Blade views
@@ -32,6 +40,18 @@ project follows [Semantic Versioning](https://semver.org/).
   makes the new `oops.theme.colors.*.accent` override possible. No visual
   or behavioral change if you haven't touched the theme config — the
   default colors per status are unchanged.
+- Replaced the "quote lead" line (a generic "here's something for you"
+  framing that oversold the randomly-picked quote as personally curated)
+  with `insight` — a line written specifically for each status, so it's
+  guaranteed to fit even when the quote below it doesn't.
+- The icon/logo badge now sizes itself to the logo's actual configured
+  `width`/`height` instead of forcing a fixed 56×56 square — a non-square
+  logo (e.g. a wide wordmark) used to get squished to fit both dimensions;
+  it now renders at its intended size.
+
+### Removed
+
+- `oops.ui.{locale}.quote_lead` config key — superseded by `insight` above.
 
 ## [1.0.0] - 2026-08-20
 

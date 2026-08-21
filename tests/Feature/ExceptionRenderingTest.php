@@ -40,7 +40,6 @@ class ExceptionRenderingTest extends TestCase
 
         $response->assertStatus(404);
         $response->assertSee('Halaman Tidak Ditemukan');
-        $response->assertSee('Sambil menunggu, ini buat kamu:');
         $response->assertSee('Kembali ke Beranda');
     }
 

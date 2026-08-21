@@ -94,7 +94,7 @@ class ThemeTest extends TestCase
 
         $response = $this->get('/throw/404');
 
-        $response->assertSee('<img src="https://example.com/logo.png"', false);
+        $response->assertSee('src="https://example.com/logo.png"', false);
         // 404's compass icon SVG path should no longer be rendered.
         $response->assertDontSee('polygon points="12,7 14,12 12,17 10,12"', false);
     }
@@ -121,5 +121,47 @@ class ThemeTest extends TestCase
 
         $response->assertSee('<svg viewBox="0 0 24 24">', false);
         $response->assertDontSee('<img src=', false);
+    }
+
+    public function test_the_icon_is_left_aligned_by_default(): void
+    {
+        config(['app.debug' => false]);
+
+        $response = $this->get('/throw/404');
+
+        $response->assertDontSee('margin-left:auto;margin-right:auto;', false);
+    }
+
+    public function test_icon_align_center_centers_the_built_in_icon(): void
+    {
+        config(['app.debug' => false, 'oops.theme.icon_align' => 'center']);
+
+        $response = $this->get('/throw/404');
+
+        $response->assertSee('class="icon-badge" style="margin-left:auto;margin-right:auto;"', false);
+    }
+
+    public function test_icon_align_center_centers_the_logo_too(): void
+    {
+        config([
+            'app.debug' => false,
+            'oops.theme.icon_align' => 'center',
+            'oops.theme.logo.url' => 'https://example.com/logo.png',
+        ]);
+
+        $response = $this->get('/throw/404');
+
+        $response->assertSee('src="https://example.com/logo.png"', false);
+        $response->assertSee('class="logo-badge"', false);
+        $response->assertSee('margin-left:auto;margin-right:auto;', false);
+    }
+
+    public function test_an_invalid_icon_align_falls_back_to_left(): void
+    {
+        config(['app.debug' => false, 'oops.theme.icon_align' => 'right']);
+
+        $response = $this->get('/throw/404');
+
+        $response->assertDontSee('margin-left:auto;margin-right:auto;', false);
     }
 }

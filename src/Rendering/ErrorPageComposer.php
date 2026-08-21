@@ -69,10 +69,10 @@ class ErrorPageComposer
                 'code' => $status,
                 'title' => $copy['title'],
                 'message' => $copy['message'],
+                'insight' => $copy['insight'] ?? null,
                 'locale' => $locale,
                 'backHomeLabel' => config("oops.ui.{$locale}.back_home") ?? config('oops.ui.id.back_home'),
                 'unknownAuthorLabel' => config("oops.ui.{$locale}.unknown_author") ?? config('oops.ui.id.unknown_author'),
-                'quoteLead' => config("oops.ui.{$locale}.quote_lead") ?? config('oops.ui.id.quote_lead'),
                 'quote' => $this->quotes->random(
                     $status,
                     config('oops.quote_languages', []),
@@ -110,7 +110,7 @@ class ErrorPageComposer
     }
 
     /**
-     * @return array{themeMode: string, colorsLight: array<string, string>, colorsDark: array<string, string>, logoUrl: ?string, logoWidth: int|string, logoHeight: int|string}
+     * @return array{themeMode: string, colorsLight: array<string, string>, colorsDark: array<string, string>, logoUrl: ?string, logoWidth: int|string, logoHeight: int|string, iconAlign: string}
      */
     protected function resolveTheme(string $view): array
     {
@@ -132,6 +132,7 @@ class ErrorPageComposer
             'logoUrl' => config('oops.theme.logo.url'),
             'logoWidth' => config('oops.theme.logo.width', 56),
             'logoHeight' => config('oops.theme.logo.height', 56),
+            'iconAlign' => config('oops.theme.icon_align') === 'center' ? 'center' : 'left',
         ];
     }
 

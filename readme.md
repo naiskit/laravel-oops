@@ -101,6 +101,39 @@ the rest. To force one view for every status instead, set `oops.view` in
 config to a view name — note that also switches which status's default
 accent applies (see [Theme](#theme)).
 
+## Insight — a line the quote doesn't have to carry alone
+
+The quote below is picked at random from a pool, so it won't always land
+perfectly for the situation. Each status also gets a short, **fixed** line —
+calm and reflective rather than apologetic — shown right after the message
+and before the quote:
+
+> Halaman yang kamu cari sepertinya sudah pindah, atau memang tidak pernah ada.
+>
+> *Tidak semua jalan menuju ke tempat yang kita duga, tapi setiap perjalanan mengajarkan sesuatu.*
+
+Unlike the quote, this line is guaranteed to fit — it's written specifically
+for that status, not drawn from a pool. It lives right alongside `title` and
+`message` in `config('oops.messages.{locale}.{status}')` as a third key,
+`insight`, so it's locale-aware the same way:
+
+```php
+'messages' => [
+    'id' => [
+        404 => [
+            'title' => 'Halaman Tidak Ditemukan',
+            'message' => '...',
+            'insight' => 'Tidak semua jalan menuju ke tempat yang kita duga, tapi setiap perjalanan mengajarkan sesuatu.',
+        ],
+    ],
+],
+```
+
+It's optional — leave `insight` out of a status (or the whole array, if
+you override `messages` yourself) and that line simply doesn't render.
+Falls back to `default_message.{locale}.insight` for any status not listed,
+same as `title`/`message`.
+
 ## Quotes matched to the error
 
 Quotes live under [`resources/quotes/`](resources/quotes/), **one folder
@@ -139,11 +172,6 @@ return [
 `meaning` is an optional short, neutral note on what the quote is getting
 at — shown under the quote on the error page (below a thin divider) when
 present. Leave it out (or `null`) to skip that line for a given quote.
-
-The quote is introduced by a short lead line (e.g. *"While you wait, here's
-something for you:"*) so it reads as the page addressing you, not a random
-citation dropped in — configurable per locale via `oops.ui.{locale}.quote_lead`
-(see [Locale](#locale) below).
 
 Publishing (`--tag=oops-quotes`) copies the whole tree to
 `resources/quotes/oops/` in your app — the exact path `config('oops.quotes_path')`
@@ -222,9 +250,7 @@ OOPS_LOCALE=en
 ```
 
 `ui` holds the small labels that aren't per-status: `back_home` (the
-button), `unknown_author` (fallback when a quote has no `author`), and
-`quote_lead` (the line introducing the quote — see
-[Quotes matched to the error](#quotes-matched-to-the-error) above).
+button) and `unknown_author` (fallback when a quote has no `author`).
 
 Add another language by adding a new key under `messages`, `default_message`,
 and `ui` in `config/oops.php` (e.g. `'fr' => [...]`), then set `OOPS_LOCALE=fr`
@@ -269,7 +295,10 @@ Each token also has an `.env` variable (`OOPS_COLOR_LIGHT_BG`,
 [`config/oops.php`](config/oops.php) for the full list.
 
 **Show a logo instead of the built-in icon** — accepts anything a browser
-can load: `asset()`, `Storage::url()`, or a full URL:
+can load: `asset()`, `Storage::url()`, or a full URL. The badge renders at
+exactly `width`×`height`, so a wide wordmark logo isn't squished into a
+square the way the built-in icon is — set both to match your logo's own
+aspect ratio (e.g. a 784×241 logo might use `width: 160, height: 49`):
 
 ```php
 'theme' => [
@@ -287,12 +316,26 @@ OOPS_LOGO_WIDTH=56
 OOPS_LOGO_HEIGHT=56
 ```
 
+**Center the icon/logo badge** instead of the default left alignment —
+title, message, insight, quote, and button stay left-aligned either way:
+
+```php
+'theme' => [
+    'icon_align' => 'center', // "left" (default) or "center"
+],
+```
+
+```
+OOPS_ICON_ALIGN=center
+```
+
 ## Configuration
 
 See [`config/oops.php`](config/oops.php) for all options: turning the
 package off, forcing it on even with `APP_DEBUG=true`, which status codes
-to intercept, the title/message per status code and locale, the quote
-language/genre filters, and the theme (light/dark mode, colors, logo).
+to intercept, the title/message/insight per status code and locale, the
+quote language/genre filters, and the theme (light/dark mode, colors,
+logo, icon alignment).
 
 ## Disabling in tests
 

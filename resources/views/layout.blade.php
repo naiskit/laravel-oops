@@ -89,10 +89,11 @@
             stroke-linejoin: round;
         }
 
-        .icon-badge img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+        .logo-badge {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
         }
 
         .code {
@@ -117,11 +118,12 @@
             margin: 0 0 32px;
         }
 
-        p.quote-lead {
-            margin: 0 0 12px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--accent);
+        p.insight {
+            font-style: italic;
+            color: var(--text);
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 0 0 32px;
         }
 
         blockquote {
@@ -168,20 +170,26 @@
 </head>
 <body>
     <div class="card">
-        <div class="icon-badge" style="{{ $logoUrl ? 'background:transparent;border:none;' : '' }}">
-            @if ($logoUrl)
-                <img src="{{ $logoUrl }}" width="{{ $logoWidth }}" height="{{ $logoHeight }}" alt="">
-            @else
+        @php
+            $badgeStyle = $iconAlign === 'center' ? 'margin-left:auto;margin-right:auto;' : '';
+        @endphp
+        @if ($logoUrl)
+            <img class="logo-badge" src="{{ $logoUrl }}" width="{{ $logoWidth }}" height="{{ $logoHeight }}" alt="" style="{{ $badgeStyle }}">
+        @else
+            <div class="icon-badge" style="{{ $badgeStyle }}">
                 <svg viewBox="0 0 24 24">{!! $icon !!}</svg>
-            @endif
-        </div>
+            </div>
+        @endif
 
         <p class="code">Error {{ $code }}</p>
         <h1>{{ $title }}</h1>
         <p class="message">{{ $message }}</p>
 
+        @if (! empty($insight))
+            <p class="insight">{{ $insight }}</p>
+        @endif
+
         @if (! empty($quote))
-            <p class="quote-lead">{{ $quoteLead }}</p>
             <blockquote>
                 <p class="quote-text">&ldquo;{{ $quote['text'] }}&rdquo;</p>
                 <cite>&mdash; {{ $quote['author'] ?? $unknownAuthorLabel }}@if (! empty($quote['source'])), {{ $quote['source'] }}@endif</cite>
