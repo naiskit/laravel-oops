@@ -15,7 +15,8 @@ return [
     // "oops::{status}" (e.g. oops::404, oops::403), falling back to
     // "oops::general" when a status has no dedicated view. Publish tag
     // "oops-views" to edit any of them. Set this to a view name to force
-    // that single view for every status instead.
+    // that single view for every status instead — note this also switches
+    // which status's default accent color applies (see "theme" below).
     'view' => null,
 
     // Language for the title, message, and "back home" button ("id" or
@@ -127,6 +128,49 @@ return [
             'back_home' => 'Back to Home',
             'unknown_author' => 'Unknown',
             'quote_lead' => 'While you wait, here\'s something for you:',
+        ],
+    ],
+
+    // Visual theme: light/dark mode and an optional logo/brand image.
+    'theme' => [
+        // "system" (follow the visitor's OS/browser setting — default),
+        // "light" to always use the light palette, or "dark" to always
+        // use the dark one, regardless of the visitor's own preference.
+        // Via .env: OOPS_THEME_MODE=dark
+        'mode' => env('OOPS_THEME_MODE', 'system'),
+
+        // Override any color token per scheme. Leave a value null to
+        // keep the package's built-in default for that token. "accent"
+        // overrides the per-status accent color (the compass, padlock,
+        // etc. all use the same accent when this is set) — leave it
+        // null to keep each status's own hue.
+        'colors' => [
+            'light' => [
+                'bg' => env('OOPS_COLOR_LIGHT_BG'),
+                'card' => env('OOPS_COLOR_LIGHT_CARD'),
+                'text' => env('OOPS_COLOR_LIGHT_TEXT'),
+                'muted' => env('OOPS_COLOR_LIGHT_MUTED'),
+                'border' => env('OOPS_COLOR_LIGHT_BORDER'),
+                'accent' => env('OOPS_COLOR_LIGHT_ACCENT'),
+            ],
+            'dark' => [
+                'bg' => env('OOPS_COLOR_DARK_BG'),
+                'card' => env('OOPS_COLOR_DARK_CARD'),
+                'text' => env('OOPS_COLOR_DARK_TEXT'),
+                'muted' => env('OOPS_COLOR_DARK_MUTED'),
+                'border' => env('OOPS_COLOR_DARK_BORDER'),
+                'accent' => env('OOPS_COLOR_DARK_ACCENT'),
+            ],
+        ],
+
+        // An image shown in place of the built-in status icon, e.g. your
+        // app's logo. Leave "url" null to keep the icon. Accepts anything
+        // a browser can load: asset(), Storage::url(), a full https://
+        // URL, etc.
+        'logo' => [
+            'url' => env('OOPS_LOGO_URL'),
+            'width' => env('OOPS_LOGO_WIDTH', 56),
+            'height' => env('OOPS_LOGO_HEIGHT', 56),
         ],
     ],
 

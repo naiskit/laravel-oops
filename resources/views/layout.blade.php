@@ -1,9 +1,11 @@
 {{--
     Shared shell used by every per-status view (404.blade.php, 403.blade.php,
     etc.) via @include('oops::layout', [...]). Each status view supplies its
-    own $icon (raw inner <svg> markup) and accent colors — this file only
-    owns the page chrome (head, styles, card structure) so a style tweak
-    doesn't need to be repeated in every status file.
+    own $icon (raw inner <svg> markup) — everything else (colors, theme
+    mode, logo) comes from ErrorPageComposer::resolveTheme(), driven by
+    config('oops.theme'). This file only owns the page chrome (head,
+    styles, card structure) so a style tweak doesn't need to be repeated
+    in every status file.
 --}}
 <!doctype html>
 <html lang="{{ $locale }}">
@@ -13,26 +15,32 @@
     <meta name="robots" content="noindex">
     <title>{{ $code }} — {{ $title }}</title>
     <style>
-        :root {
-            color-scheme: light dark;
-            --bg: #f5f5f4;
-            --card: #ffffff;
-            --text: #1c1917;
-            --muted: #78716c;
-            --accent: {{ $accentLight }};
-            --border: #e7e5e4;
-        }
+        @php
+            $vars = fn (array $c) => "--bg:{$c['bg']};--card:{$c['card']};--text:{$c['text']};--muted:{$c['muted']};--border:{$c['border']};--accent:{$c['accent']};";
+        @endphp
 
-        @media (prefers-color-scheme: dark) {
+        @if ($themeMode === 'dark')
             :root {
-                --bg: #18181b;
-                --card: #232326;
-                --text: #f4f4f5;
-                --muted: #a1a1aa;
-                --accent: {{ $accentDark }};
-                --border: #313134;
+                color-scheme: dark;
+                {!! $vars($colorsDark) !!}
             }
-        }
+        @elseif ($themeMode === 'light')
+            :root {
+                color-scheme: light;
+                {!! $vars($colorsLight) !!}
+            }
+        @else
+            :root {
+                color-scheme: light dark;
+                {!! $vars($colorsLight) !!}
+            }
+
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    {!! $vars($colorsDark) !!}
+                }
+            }
+        @endif
 
         * { box-sizing: border-box; }
 
@@ -68,6 +76,7 @@
             background: var(--bg);
             border: 1px solid var(--border);
             margin-bottom: 20px;
+            overflow: hidden;
         }
 
         .icon-badge svg {
@@ -78,6 +87,12 @@
             stroke-width: 1.6;
             stroke-linecap: round;
             stroke-linejoin: round;
+        }
+
+        .icon-badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .code {
@@ -153,8 +168,12 @@
 </head>
 <body>
     <div class="card">
-        <div class="icon-badge">
-            <svg viewBox="0 0 24 24">{!! $icon !!}</svg>
+        <div class="icon-badge" style="{{ $logoUrl ? 'background:transparent;border:none;' : '' }}">
+            @if ($logoUrl)
+                <img src="{{ $logoUrl }}" width="{{ $logoWidth }}" height="{{ $logoHeight }}" alt="">
+            @else
+                <svg viewBox="0 0 24 24">{!! $icon !!}</svg>
+            @endif
         </div>
 
         <p class="code">Error {{ $code }}</p>

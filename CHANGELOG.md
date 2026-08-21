@@ -4,6 +4,35 @@ All notable changes to `laravel-oops` are documented here. The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this
 project follows [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- Configurable theme via `config('oops.theme')`: force `light` or `dark`
+  mode instead of following the visitor's own OS/browser preference,
+  override any color token (including one `accent` for every status
+  instead of each keeping its own hue), and show a logo image in place of
+  the built-in icon.
+- `SECURITY.md` and a security-focused test suite
+  (`tests/Feature/SecurityTest.php`) asserting exception messages, stack
+  traces, and file paths never reach the rendered page, including when
+  `APP_DEBUG=true` + `oops.force=true`.
+- CI now tests the full support matrix — PHP 8.2/8.3/8.4 × Laravel
+  11/12/13 — plus PHPStan/Larastan (level 5) and code coverage reporting.
+- `CONTRIBUTING.md` and Dependabot (composer + github-actions, weekly).
+- Tests covering `ValidationException` handling, a custom app-level
+  `renderable()` callback taking precedence over the package's own, the
+  `OOPS_FORCE` env var through its real parsing path, and published
+  views/quotes actually being picked up over the bundled ones.
+
+### Changed
+
+- Per-status accent colors moved out of the individual status Blade views
+  and into `Naiskit\LaravelOops\Rendering\ErrorPageComposer`, which is what
+  makes the new `oops.theme.colors.*.accent` override possible. No visual
+  or behavioral change if you haven't touched the theme config — the
+  default colors per status are unchanged.
+
 ## [1.0.0] - 2026-08-20
 
 ### Added

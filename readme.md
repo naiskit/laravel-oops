@@ -10,6 +10,16 @@ A friendly Laravel error page package that makes unexpected errors a little
 less frustrating — with a random quote (matched to the kind of error) to
 keep users company while things get fixed.
 
+## Preview
+
+![All 6 default status pages — 403, 404, 419, 429, 500, and 503 — each with its own icon and accent color](docs/preview-1.png)
+
+![Theme config in action: forced dark mode, a custom accent color, and a logo replacing the icon](docs/preview-2.png)
+
+Every card above is a real render of the package's own views. See
+[Theme](#theme) for colors, dark mode, and logo, and
+[Previewing the page](#previewing-the-page) to render any status locally.
+
 ## Requirements
 
 - PHP ^8.2
@@ -59,11 +69,11 @@ Auth redirects (`AuthenticationException`), validation errors
 
 Each status code has its own Blade view — [`404.blade.php`](resources/views/404.blade.php),
 [`403.blade.php`](resources/views/403.blade.php), and so on — with its own
-icon and accent color, resolved automatically as `oops::{status}` and
-falling back to [`general.blade.php`](resources/views/general.blade.php)
-for any status without a dedicated file:
+icon, resolved automatically as `oops::{status}` and falling back to
+[`general.blade.php`](resources/views/general.blade.php) for any status
+without a dedicated file:
 
-| Status | Motif | Accent |
+| Status | Motif | Default accent |
 |---|---|---|
 | 404 | compass | violet |
 | 403 | padlock | rose |
@@ -73,17 +83,23 @@ for any status without a dedicated file:
 | 503 | crescent moon | slate |
 | *(fallback)* | dot | zinc |
 
-They all `@include('oops::layout', [...])` — a shared partial that owns
-just the page chrome (head, CSS, card structure), the same pattern Laravel
-itself uses for its own `resources/views/errors/*.blade.php`. This keeps a
-style tweak to one place while each status view stays free to differ in
-icon, color, or eventually its own layout entirely.
+They all `@include('oops::layout', ['icon' => '<svg markup>'])` — a shared
+partial that owns the page chrome (head, CSS, card structure) *and* theme
+resolution, the same pattern Laravel itself uses for its own
+`resources/views/errors/*.blade.php`. A status view only ever declares its
+icon; everything visual beyond that — colors, dark mode, an optional logo —
+comes from `config('oops.theme')` via
+`Naiskit\LaravelOops\Rendering\ErrorPageComposer` (see
+[Theme](#theme) below), so a style tweak doesn't need repeating across
+seven files, and each status stays free to differ only in icon or,
+eventually, its own layout entirely.
 
 Publishing (`--tag=oops-views`) copies the whole folder — including
 `layout.blade.php` — so you can edit any single status view, or add a
 `{code}.blade.php` for a status not covered by default, without touching
 the rest. To force one view for every status instead, set `oops.view` in
-config to a view name.
+config to a view name — note that also switches which status's default
+accent applies (see [Theme](#theme)).
 
 ## Quotes matched to the error
 
@@ -214,12 +230,69 @@ Add another language by adding a new key under `messages`, `default_message`,
 and `ui` in `config/oops.php` (e.g. `'fr' => [...]`), then set `OOPS_LOCALE=fr`
 or switch the app's own locale to `fr`.
 
+## Theme
+
+By default the page follows the visitor's own OS/browser light-or-dark
+setting (`prefers-color-scheme`), each status using its own accent color
+(see the table in [A view per error](#a-view-per-error-not-one-shared-template)
+above). All of that is configurable via `config('oops.theme')`.
+
+**Force light or dark mode**, ignoring the visitor's own preference:
+
+```php
+'theme' => [
+    'mode' => 'dark', // "system" (default), "light", or "dark"
+],
+```
+
+```
+OOPS_THEME_MODE=dark
+```
+
+**Override any color token**, per light/dark scheme. Leave a value `null`
+to keep the built-in default for that token — `accent` is the one most
+worth knowing about: setting it overrides *every* status's own accent with
+one color of your choosing, instead of each status keeping compass/padlock/etc.
+in its own hue:
+
+```php
+'theme' => [
+    'colors' => [
+        'light' => ['bg' => null, 'card' => null, 'text' => null, 'muted' => null, 'border' => null, 'accent' => '#2563eb'],
+        'dark' => ['bg' => null, 'card' => null, 'text' => null, 'muted' => null, 'border' => null, 'accent' => '#60a5fa'],
+    ],
+],
+```
+
+Each token also has an `.env` variable (`OOPS_COLOR_LIGHT_BG`,
+`OOPS_COLOR_LIGHT_ACCENT`, `OOPS_COLOR_DARK_BG`, etc.) — see
+[`config/oops.php`](config/oops.php) for the full list.
+
+**Show a logo instead of the built-in icon** — accepts anything a browser
+can load: `asset()`, `Storage::url()`, or a full URL:
+
+```php
+'theme' => [
+    'logo' => [
+        'url' => asset('images/logo.png'),
+        'width' => 56,
+        'height' => 56,
+    ],
+],
+```
+
+```
+OOPS_LOGO_URL=https://example.com/logo.png
+OOPS_LOGO_WIDTH=56
+OOPS_LOGO_HEIGHT=56
+```
+
 ## Configuration
 
 See [`config/oops.php`](config/oops.php) for all options: turning the
 package off, forcing it on even with `APP_DEBUG=true`, which status codes
-to intercept, the title/message per status code and locale, and the quote
-language/genre filters.
+to intercept, the title/message per status code and locale, the quote
+language/genre filters, and the theme (light/dark mode, colors, logo).
 
 ## Disabling in tests
 
