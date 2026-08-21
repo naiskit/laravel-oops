@@ -81,10 +81,19 @@ project follows [Semantic Versioning](https://semver.org/).
   to `insight`, the two nearly always read as saying the same thing twice.
   `message` still exists in config and is passed to the view (for anyone
   overriding it), it's just not part of the default layout anymore.
+- The default icon/logo badge grew from 48px/24px icon to 76px/38px icon
+  to better fill the sidebar column; `oops.theme.logo.width`/`height`
+  default from 56 to 76 to match. Only affects installs that never
+  configured a logo size of their own.
 
 ### Removed
 
 - `oops.ui.{locale}.quote_lead` config key — superseded by `insight` above.
+- Seven bundled Indonesian "formal" quotes (403/404/419/429/500/503) that
+  were just the status's own error notice restated in officialese and
+  attributed to "Anonymous" — not real quotes from any real source. The
+  `formal` genre pool for those statuses is empty in Indonesian until real
+  quotes replace them; the `wise`/`humor` pools are unaffected.
 
 ## [1.0.0] - 2026-08-20
 

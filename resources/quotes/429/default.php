@@ -44,14 +44,6 @@ return [
         'meaning' => 'Menjelaskan bahwa hasil besar bisa didapat dari langkah-langkah kecil yang konsisten.',
     ],
     [
-        'text' => 'Terlalu banyak permintaan diterima dalam waktu singkat. Silakan coba lagi beberapa saat lagi.',
-        'author' => 'Anonymous',
-        'source' => null,
-        'lang' => 'id',
-        'genre' => 'formal',
-        'meaning' => 'Pemberitahuan resmi bahwa permintaan dibatasi sementara karena volumenya terlalu tinggi.',
-    ],
-    [
         'text' => 'Santai dulu, servernya juga butuh napas.',
         'author' => 'Anonymous',
         'source' => null,

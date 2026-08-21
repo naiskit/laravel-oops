@@ -68,14 +68,6 @@ return [
         'meaning' => 'Menyamakan gangguan sistem dengan proses wajar dalam pertumbuhan apa pun.',
     ],
     [
-        'text' => 'Telah terjadi kesalahan pada sistem kami. Tim teknis sedang menanganinya.',
-        'author' => 'Anonymous',
-        'source' => null,
-        'lang' => 'id',
-        'genre' => 'formal',
-        'meaning' => 'Pemberitahuan resmi bahwa terjadi kesalahan sistem dan sedang ditangani.',
-    ],
-    [
         'text' => 'Bukan kamu yang error, ini kami. Lagi proses insaf.',
         'author' => 'Anonymous',
         'source' => null,

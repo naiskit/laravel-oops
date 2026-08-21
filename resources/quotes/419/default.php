@@ -44,14 +44,6 @@ return [
         'meaning' => 'Mengaitkan berlalunya waktu dengan berakhirnya sebuah sesi.',
     ],
     [
-        'text' => 'Sesi Anda telah berakhir demi keamanan. Silakan masuk kembali.',
-        'author' => 'Anonymous',
-        'source' => null,
-        'lang' => 'id',
-        'genre' => 'formal',
-        'meaning' => 'Pemberitahuan resmi bahwa sesi telah berakhir dan perlu masuk kembali.',
-    ],
-    [
         'text' => 'Sesinya udah kedaluwarsa, kayak janji move on.',
         'author' => 'Anonymous',
         'source' => null,

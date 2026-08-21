@@ -372,16 +372,16 @@ aspect ratio (e.g. a 784×241 logo might use `width: 160, height: 49`):
 'theme' => [
     'logo' => [
         'url' => asset('images/logo.png'),
-        'width' => 56,
-        'height' => 56,
+        'width' => 76,
+        'height' => 76,
     ],
 ],
 ```
 
 ```
 OOPS_LOGO_URL=https://example.com/logo.png
-OOPS_LOGO_WIDTH=56
-OOPS_LOGO_HEIGHT=56
+OOPS_LOGO_WIDTH=76
+OOPS_LOGO_HEIGHT=76
 ```
 
 **Left-align the sidebar contents** instead of the default centered

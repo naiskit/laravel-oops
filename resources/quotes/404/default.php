@@ -75,12 +75,4 @@ return [
         'genre' => 'humor',
         'meaning' => 'Menyampaikan pesan halaman tidak ditemukan dengan nada ringan.',
     ],
-    [
-        'text' => 'Halaman yang Anda cari tidak dapat kami temukan pada sistem ini.',
-        'author' => 'Anonymous',
-        'source' => null,
-        'lang' => 'id',
-        'genre' => 'formal',
-        'meaning' => 'Pemberitahuan resmi bahwa halaman yang diminta tidak tersedia.',
-    ],
 ];

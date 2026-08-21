@@ -95,21 +95,21 @@
         }
 
         .icon-badge {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 76px;
+            height: 76px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--card);
             border: 1px solid var(--border);
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             overflow: hidden;
         }
 
         .icon-badge svg {
-            width: 24px;
-            height: 24px;
+            width: 38px;
+            height: 38px;
             stroke: var(--accent);
             fill: none;
             stroke-width: 1.6;

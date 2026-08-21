@@ -44,14 +44,6 @@ return [
         'meaning' => 'Menjelaskan bahwa ada hal-hal yang memang belum bisa diakses, tanpa menyiratkan kesalahan pada siapa pun.',
     ],
     [
-        'text' => 'Akses ke halaman ini dibatasi. Silakan hubungi administrator jika Anda merasa ini keliru.',
-        'author' => 'Anonymous',
-        'source' => null,
-        'lang' => 'id',
-        'genre' => 'formal',
-        'meaning' => 'Pemberitahuan resmi bahwa akses ke halaman ini dibatasi.',
-    ],
-    [
         'text' => 'Aksesnya lagi dijaga ketat, kayak gerbang kompleks jam 10 malam.',
         'author' => 'Anonymous',
         'source' => null,

@@ -198,8 +198,8 @@ class ErrorPageComposer
             'colorsLight' => $this->resolveScheme('light', $defaultAccent['light']),
             'colorsDark' => $this->resolveScheme('dark', $defaultAccent['dark']),
             'logoUrl' => config('oops.theme.logo.url'),
-            'logoWidth' => config('oops.theme.logo.width', 56),
-            'logoHeight' => config('oops.theme.logo.height', 56),
+            'logoWidth' => config('oops.theme.logo.width', 76),
+            'logoHeight' => config('oops.theme.logo.height', 76),
             'iconAlign' => config('oops.theme.icon_align') === 'left' ? 'left' : 'center',
         ];
     }

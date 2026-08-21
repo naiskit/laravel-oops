@@ -36,22 +36,6 @@ return [
         'meaning' => 'Menjelaskan bahwa jeda sementara adalah bagian dari persiapan, bukan kekalahan.',
     ],
     [
-        'text' => 'Kami sedang berbenah sebentar, agar bisa melayani lebih baik.',
-        'author' => 'Anonymous',
-        'source' => null,
-        'lang' => 'id',
-        'genre' => 'formal',
-        'meaning' => 'Pemberitahuan resmi tentang perbaikan sementara yang sedang berlangsung.',
-    ],
-    [
-        'text' => 'Sistem sedang dalam pemeliharaan terjadwal. Mohon coba kembali beberapa saat lagi.',
-        'author' => 'Anonymous',
-        'source' => null,
-        'lang' => 'id',
-        'genre' => 'formal',
-        'meaning' => 'Pemberitahuan resmi mengenai jadwal pemeliharaan sistem.',
-    ],
-    [
         'text' => 'Lagi mode "me time" sebentar, server-nya. Sabar, ya.',
         'author' => 'Anonymous',
         'source' => null,

@@ -203,8 +203,8 @@ return [
         // URL, etc.
         'logo' => [
             'url' => env('OOPS_LOGO_URL'),
-            'width' => env('OOPS_LOGO_WIDTH', 56),
-            'height' => env('OOPS_LOGO_HEIGHT', 56),
+            'width' => env('OOPS_LOGO_WIDTH', 76),
+            'height' => env('OOPS_LOGO_HEIGHT', 76),
         ],
 
         // Alignment of the sidebar contents (icon/logo + the large status
