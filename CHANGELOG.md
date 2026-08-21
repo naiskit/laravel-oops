@@ -88,8 +88,9 @@ project follows [Semantic Versioning](https://semver.org/).
 - The sidebar is now a solid block filled with the status's own accent
   color (white icon/code/label on top) instead of matching the page
   background — reads as an error page at a glance rather than a neutral
-  info card. Widened from 190px to 240px and the status-code number grew
-  from 40px to 64px to carry the bolder treatment. The fill always uses
+  info card. Widened from a fixed 190px column to a proportional 3fr/5fr
+  grid split (~38% of the card) and the status-code number grew from 40px
+  to 64px to carry the bolder treatment. The fill always uses
   the *light*-mode accent value, even in dark mode, since that color is
   saturated enough to hold white text — the dark-mode accent is a lighter
   tint meant for text/borders on a dark page, not a solid fill.

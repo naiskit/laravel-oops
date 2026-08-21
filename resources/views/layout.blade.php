@@ -85,7 +85,7 @@
 
         .grid {
             display: grid;
-            grid-template-columns: 240px 1fr;
+            grid-template-columns: 3fr 5fr;
         }
 
         .side {
