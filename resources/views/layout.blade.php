@@ -290,7 +290,7 @@
 
                 @if ($showFooter)
                     <p class="footer">
-                        <a href="https://github.com/naiskit/laravel-oops" target="_blank" rel="noopener">Powered by Laravel Oops</a>
+                        <a href="https://github.com/naiskit/laravel-oops" target="_blank" rel="noopener">Powered by Naiskit</a>
                     </p>
                 @endif
             </div>

@@ -9,7 +9,7 @@ return [
         'source' => 'Alice\'s Adventures in Wonderland',
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Notes that returning to an earlier state isn\'t possible once time and circumstances have moved on.',
+        'meaning' => 'Yesterday\'s version of things is gone the moment today begins.',
     ],
     [
         'text' => 'Tomorrow is always fresh, with no mistakes in it.',
@@ -17,7 +17,7 @@ return [
         'source' => 'Anne of Green Gables',
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Frames a new day as a chance to start again without carrying prior mistakes.',
+        'meaning' => 'A fresh page waiting, with none of yesterday\'s mistakes carried over.',
     ],
     [
         'text' => 'The Moving Finger writes; and, having writ, moves on.',
@@ -25,7 +25,7 @@ return [
         'source' => 'Rubaiyat of Omar Khayyam',
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Reflects on time moving forward regardless of what has already happened.',
+        'meaning' => 'Whatever\'s already written keeps moving forward, whether we\'re ready or not.',
     ],
     [
         'text' => 'Time is an illusion. Lunchtime doubly so.',
@@ -33,7 +33,7 @@ return [
         'source' => 'The Hitchhiker\'s Guide to the Galaxy',
         'lang' => 'en',
         'genre' => 'humor',
-        'meaning' => 'A playful remark about how perceptions of time can be unreliable.',
+        'meaning' => 'Time is slippery enough that even a countdown can\'t always be trusted.',
     ],
     [
         'text' => 'Waktu terus berjalan, sesi pun ikut berlalu.',
@@ -41,7 +41,7 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'wise',
-        'meaning' => 'Mengaitkan berlalunya waktu dengan berakhirnya sebuah sesi.',
+        'meaning' => 'Waktu terus berjalan, dan sesi ini pun ikut berlalu bersamanya.',
     ],
     [
         'text' => 'Sesinya udah kedaluwarsa, kayak janji move on.',
@@ -49,7 +49,7 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'humor',
-        'meaning' => 'Menyampaikan berakhirnya sesi dengan perumpamaan yang santai.',
+        'meaning' => 'Sama-sama sudah kedaluwarsa: sesi ini, dan alasan buat nunda-nunda.',
     ],
     [
         'text' => 'Kelamaan buka tab-nya, sesinya keburu ngambek.',
@@ -57,6 +57,6 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'humor',
-        'meaning' => 'Menjelaskan sesi yang berakhir karena terlalu lama tidak digunakan.',
+        'meaning' => 'Ditinggal kelamaan, ya wajar kalau akhirnya ngambek sendiri.',
     ],
 ];

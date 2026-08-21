@@ -84,7 +84,7 @@ class ReferenceAndSupportTest extends TestCase
 
         $response = $this->get('/throw/404');
 
-        $response->assertSee('Powered by Laravel Oops');
+        $response->assertSee('Powered by Naiskit');
         $response->assertSee('href="https://github.com/naiskit/laravel-oops"', false);
     }
 
@@ -94,6 +94,6 @@ class ReferenceAndSupportTest extends TestCase
 
         $response = $this->get('/throw/404');
 
-        $response->assertDontSee('Powered by Laravel Oops');
+        $response->assertDontSee('Powered by Naiskit');
     }
 }

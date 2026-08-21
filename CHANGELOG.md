@@ -46,7 +46,7 @@ project follows [Semantic Versioning](https://semver.org/).
   logs at `error`, everything else at `warning` — so a code a visitor
   reports back can be traced to the actual failure. The same code is what
   `{ref}` in `support` copy resolves to.
-- A "Powered by Laravel Oops" footer linking back to this repo, shown by
+- A "Powered by Naiskit" footer linking back to this repo, shown by
   default under the button. `config('oops.show_footer')` (or
   `OOPS_SHOW_FOOTER=false`) turns it off for a white-labeled page.
 - The random quote no longer repeats itself back-to-back: the last quote
@@ -85,6 +85,11 @@ project follows [Semantic Versioning](https://semver.org/).
   to better fill the sidebar column; `oops.theme.logo.width`/`height`
   default from 56 to 76 to match. Only affects installs that never
   configured a logo size of their own.
+- Rewrote every bundled quote's `meaning` line: previously written as a
+  third-person explanation of the quote ("Suggests that...", "Menjelaskan
+  bahwa...") — now a short reflection extending the quote's own thought,
+  not annotating it from the outside. Wording-only; the `meaning` field's
+  shape and behavior are unchanged.
 
 ### Removed
 

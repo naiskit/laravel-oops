@@ -9,7 +9,7 @@ return [
         'source' => 'Tao Te Ching',
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Suggests that things can still be accomplished without being rushed.',
+        'meaning' => 'Nothing here is rushing, and somehow it all still gets done.',
     ],
     [
         'text' => 'A journey of a thousand miles begins with a single step.',
@@ -17,7 +17,7 @@ return [
         'source' => 'Tao Te Ching',
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Notes that any long process starts from a single, smaller action.',
+        'meaning' => 'Even the longest wait started with just one small step.',
     ],
     [
         'text' => 'Haste makes waste.',
@@ -25,7 +25,7 @@ return [
         'source' => null,
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Points out that rushing can lead to more errors or lost effort.',
+        'meaning' => 'Rushing this again would probably just mean doing it twice.',
     ],
     [
         'text' => 'Biar lambat asal selamat.',
@@ -33,7 +33,7 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'wise',
-        'meaning' => 'Menekankan bahwa kehati-hatian lebih penting daripada kecepatan.',
+        'meaning' => 'Lebih baik sampai dengan selamat, daripada cepat tapi berantakan.',
     ],
     [
         'text' => 'Sedikit demi sedikit, lama-lama menjadi bukit.',
@@ -41,7 +41,7 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'wise',
-        'meaning' => 'Menjelaskan bahwa hasil besar bisa didapat dari langkah-langkah kecil yang konsisten.',
+        'meaning' => 'Sedikit demi sedikit, dan yang kecil itu perlahan jadi berarti.',
     ],
     [
         'text' => 'Santai dulu, servernya juga butuh napas.',
@@ -49,7 +49,7 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'humor',
-        'meaning' => 'Menyampaikan pembatasan permintaan dengan nada santai.',
+        'meaning' => 'Bahkan server butuh jeda sebentar sebelum lanjut lagi.',
     ],
     [
         'text' => 'Pelan-pelan aja, ini bukan balapan.',
@@ -57,6 +57,6 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'humor',
-        'meaning' => 'Mengajak untuk tidak terburu-buru mengulang permintaan.',
+        'meaning' => 'Toh ini bukan lomba — pelan-pelan juga sampai kok.',
     ],
 ];

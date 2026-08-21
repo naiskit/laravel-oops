@@ -9,7 +9,7 @@ return [
         'source' => 'Before the Law (in The Trial)',
         'lang' => 'en',
         'genre' => 'formal',
-        'meaning' => 'From a parable about a gate meant for one visitor that is ultimately closed to them — often read as a reflection on inaccessible authority.',
+        'meaning' => 'A door meant for exactly one person, and shut all the same — access was never really the point.',
     ],
     [
         'text' => 'When one door of happiness closes, another opens.',
@@ -17,7 +17,7 @@ return [
         'source' => null,
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Suggests that a closed opportunity is often followed by a different one.',
+        'meaning' => 'One door closes, and somewhere another is already opening.',
     ],
     [
         'text' => 'Every wall is a door.',
@@ -25,7 +25,7 @@ return [
         'source' => null,
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Implies that an apparent barrier can also work as a point of entry, depending on perspective.',
+        'meaning' => 'What looks like a wall from here might be a door from somewhere else.',
     ],
     [
         'text' => 'I can resist everything except temptation.',
@@ -33,7 +33,7 @@ return [
         'source' => 'Lady Windermere\'s Fan',
         'lang' => 'en',
         'genre' => 'humor',
-        'meaning' => 'A witty remark about giving in to whatever is being held back.',
+        'meaning' => 'The one thing harder to resist than access is wanting it more once it\'s denied.',
     ],
     [
         'text' => 'Beberapa pintu memang bukan untuk kita buka — bukan berarti kita salah, hanya belum waktunya.',
@@ -41,7 +41,7 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'wise',
-        'meaning' => 'Menjelaskan bahwa ada hal-hal yang memang belum bisa diakses, tanpa menyiratkan kesalahan pada siapa pun.',
+        'meaning' => 'Ada yang memang belum waktunya dibuka — bukan karena ada yang salah, hanya belum saatnya.',
     ],
     [
         'text' => 'Aksesnya lagi dijaga ketat, kayak gerbang kompleks jam 10 malam.',
@@ -49,7 +49,7 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'humor',
-        'meaning' => 'Menyampaikan pembatasan akses dengan perumpamaan yang santai.',
+        'meaning' => 'Kadang penjagaan ketat itu bukan soal kita, cuma soal jamnya belum pas.',
     ],
     [
         'text' => 'Pintu ini terkunci, tapi bukan berarti kami dendam, kok.',
@@ -57,6 +57,6 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'humor',
-        'meaning' => 'Menegaskan bahwa akses ditutup tanpa maksud personal apa pun.',
+        'meaning' => 'Pintu terkunci bukan berarti ada dendam — cuma memang belum saatnya dibuka.',
     ],
 ];

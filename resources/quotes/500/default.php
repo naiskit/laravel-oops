@@ -9,7 +9,7 @@ return [
         'source' => 'Worstward Ho',
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Frames repeated failure as part of a process rather than a stopping point.',
+        'meaning' => 'Failing again isn\'t the end of the process — it\'s just another lap of it.',
     ],
     [
         'text' => 'I have not failed. I\'ve just found 10,000 ways that won\'t work.',
@@ -17,7 +17,7 @@ return [
         'source' => null,
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Reframes failed attempts as information gathered along the way.',
+        'meaning' => 'Every attempt that didn\'t work still counted for something.',
     ],
     [
         'text' => 'The world breaks everyone, and afterward, many are strong at the broken places.',
@@ -25,7 +25,7 @@ return [
         'source' => 'A Farewell to Arms',
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Observes that difficulty can also be where resilience develops.',
+        'meaning' => 'The broken places have a way of becoming the strongest ones.',
     ],
     [
         'text' => 'Our greatest glory is not in never falling, but in rising every time we fall.',
@@ -33,7 +33,7 @@ return [
         'source' => null,
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Suggests that recovering from setbacks matters more than avoiding them entirely.',
+        'meaning' => 'Falling isn\'t really the failure — staying down would be.',
     ],
     [
         'text' => 'I\'ve failed over and over and over again in my life and that is why I succeed.',
@@ -41,7 +41,7 @@ return [
         'source' => null,
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Connects repeated failure directly to eventual success.',
+        'meaning' => 'All those failed attempts, somehow, are exactly what got here in the end.',
     ],
     [
         'text' => 'Success is not final, failure is not fatal: it is the courage to continue that counts.',
@@ -49,7 +49,7 @@ return [
         'source' => null,
         'lang' => 'en',
         'genre' => 'formal',
-        'meaning' => 'Frames both success and failure as temporary, with persistence as the constant.',
+        'meaning' => 'Success passes, failure passes — what stays is whether we kept going.',
     ],
     [
         'text' => 'It\'s not a bug, it\'s an unexpected feature.',
@@ -57,7 +57,7 @@ return [
         'source' => null,
         'lang' => 'en',
         'genre' => 'humor',
-        'meaning' => 'A common programmer joke that reframes an error as an unplanned feature.',
+        'meaning' => 'Every error is just a feature that hasn\'t been documented yet.',
     ],
     [
         'text' => 'Setiap sistem yang tumbuh pasti pernah rebah; yang penting bangun lagi.',
@@ -65,7 +65,7 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'wise',
-        'meaning' => 'Menyamakan gangguan sistem dengan proses wajar dalam pertumbuhan apa pun.',
+        'meaning' => 'Sistem yang tumbuh memang sesekali rebah — yang penting tahu caranya bangun lagi.',
     ],
     [
         'text' => 'Bukan kamu yang error, ini kami. Lagi proses insaf.',
@@ -73,7 +73,7 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'humor',
-        'meaning' => 'Menegaskan dengan nada santai bahwa kesalahan berasal dari sistem, bukan pengguna.',
+        'meaning' => 'Yang error bukan kamu kok — ini memang lagi proses insaf sendiri.',
     ],
     [
         'text' => 'Errornya bukan kiamat, cuma server lagi drama sebentar.',
@@ -81,6 +81,6 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'humor',
-        'meaning' => 'Meredakan kepanikan atas error dengan mengecilkan skalanya.',
+        'meaning' => 'Bukan kiamat, cuma drama sesaat yang kebetulan muncul di waktu yang salah.',
     ],
 ];

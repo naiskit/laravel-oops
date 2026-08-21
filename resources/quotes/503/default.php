@@ -9,7 +9,7 @@ return [
         'source' => null,
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Compares rest to a period that improves later output rather than wasting time.',
+        'meaning' => 'A field left to rest comes back giving more, not less.',
     ],
     [
         'text' => 'Adopt the pace of nature: her secret is patience.',
@@ -17,7 +17,7 @@ return [
         'source' => 'Essays',
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Suggests that moving at a natural pace is still compatible with getting things done.',
+        'meaning' => 'Nature\'s pace looks slow, and somehow still gets everything done.',
     ],
     [
         'text' => 'By failing to prepare, you are preparing to fail.',
@@ -25,7 +25,7 @@ return [
         'source' => null,
         'lang' => 'en',
         'genre' => 'formal',
-        'meaning' => 'Notes that preparation and outcome are directly connected.',
+        'meaning' => 'What isn\'t prepared for now tends to show up later, uninvited.',
     ],
     [
         'text' => 'Istirahat sejenak bukan tanda kalah, tapi persiapan untuk melangkah lebih jauh.',
@@ -33,7 +33,7 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'wise',
-        'meaning' => 'Menjelaskan bahwa jeda sementara adalah bagian dari persiapan, bukan kekalahan.',
+        'meaning' => 'Jeda sebentar ini bukan kekalahan — cuma bagian dari ancang-ancang.',
     ],
     [
         'text' => 'Lagi mode "me time" sebentar, server-nya. Sabar, ya.',
@@ -41,7 +41,7 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'humor',
-        'meaning' => 'Menyampaikan status pemeliharaan dengan cara yang santai.',
+        'meaning' => 'Server juga butuh me time sesekali, biar nggak gampang ngambek.',
     ],
     [
         'text' => 'Server lagi spa dulu sebentar, biar makin kinclong.',
@@ -49,6 +49,6 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'humor',
-        'meaning' => 'Menggambarkan pemeliharaan sistem dengan perumpamaan yang ringan.',
+        'meaning' => 'Sedikit perawatan sekarang, biar nanti larinya makin kencang.',
     ],
 ];

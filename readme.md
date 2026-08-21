@@ -12,9 +12,9 @@ keep users company while things get fixed.
 
 ## Preview
 
-![All 6 default status pages — 403, 404, 419, 429, 500, and 503 — each with its own icon and accent color](docs/preview-1.png)
+![All 6 default status pages — 403, 404, 419, 429, 500, and 503 — each with its own icon and accent color](docs/screenshoot/preview-1.png)
 
-![Theme config in action: forced dark mode, a custom accent color, and a logo replacing the icon](docs/preview-2.png)
+![Theme config in action: forced dark mode and a custom accent color](docs/screenshoot/preview-2.png)
 
 Every card above is a real render of the package's own views. See
 [Theme](#theme) for colors, dark mode, and logo, and
@@ -169,15 +169,16 @@ return [
         'source' => 'The Fellowship of the Ring',
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Suggests that moving without a fixed destination doesn\'t necessarily mean someone is off track.',
+        'meaning' => 'Not having a fixed destination isn\'t the same as being lost.',
     ],
     // ...
 ];
 ```
 
-`meaning` is an optional short, neutral note on what the quote is getting
-at — shown under the quote on the error page (below a thin divider) when
-present. Leave it out (or `null`) to skip that line for a given quote.
+`meaning` is an optional short line that extends the quote's own thought —
+written as a passing reflection, not an explanation of what the quote
+"means" — shown under the quote on the error page (below a thin divider)
+when present. Leave it out (or `null`) to skip that line for a given quote.
 
 Publishing (`--tag=oops-quotes`) copies the whole tree to
 `resources/quotes/oops/` in your app — the exact path `config('oops.quotes_path')`
@@ -272,8 +273,8 @@ status not listed.
 
 ## Footer
 
-A small "Powered by Laravel Oops" line, linking back to this repo, sits
-under the button by default. Turn it off for a fully white-labeled page:
+A small "Powered by Naiskit" line, linking back to this repo, sits under
+the button by default. Turn it off for a fully white-labeled page:
 
 ```php
 'show_footer' => false,

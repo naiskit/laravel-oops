@@ -9,7 +9,7 @@ return [
         'source' => 'Harry Potter and the Philosopher\'s Stone',
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Cautions against focusing so much on wishes that present action is neglected.',
+        'meaning' => 'Dwelling too long on what could be tends to cost what\'s happening right now.',
     ],
     [
         'text' => 'You are braver than you believe, stronger than you seem, and smarter than you think.',
@@ -17,7 +17,7 @@ return [
         'source' => 'Winnie-the-Pooh',
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'An encouraging remark about underestimated personal strength.',
+        'meaning' => 'More strength than expected usually shows up exactly when it\'s needed.',
     ],
     [
         'text' => 'It is only with the heart that one can see rightly; what is essential is invisible to the eye.',
@@ -25,7 +25,7 @@ return [
         'source' => 'The Little Prince',
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Suggests that some things are better understood through feeling than through direct observation.',
+        'meaning' => 'Some things only make sense once you stop trying to just look at them.',
     ],
     [
         'text' => 'Out of suffering have emerged the strongest souls.',
@@ -33,7 +33,7 @@ return [
         'source' => 'The Prophet',
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Connects difficult experience with the development of resilience.',
+        'meaning' => 'The hardest stretches tend to be where the strongest souls were shaped.',
     ],
     [
         'text' => 'The secret of getting ahead is getting started.',
@@ -41,7 +41,7 @@ return [
         'source' => null,
         'lang' => 'en',
         'genre' => 'wise',
-        'meaning' => 'Frames starting a task as the main obstacle to progress.',
+        'meaning' => 'The hardest part of any of this was probably just starting it.',
     ],
     [
         'text' => 'It is hard to fail, but it is worse never to have tried to succeed.',
@@ -49,7 +49,7 @@ return [
         'source' => null,
         'lang' => 'en',
         'genre' => 'formal',
-        'meaning' => 'Compares the discomfort of failing with the cost of not attempting at all.',
+        'meaning' => 'Failing stings less, in the end, than never having tried at all.',
     ],
     [
         'text' => 'Well, this is embarrassing.',
@@ -57,7 +57,7 @@ return [
         'source' => null,
         'lang' => 'en',
         'genre' => 'humor',
-        'meaning' => 'A common lighthearted phrase used to acknowledge something going wrong.',
+        'meaning' => 'Sometimes the only honest thing to say is exactly this.',
     ],
     [
         'text' => 'Bermimpilah, karena Tuhan akan memeluk mimpi-mimpi itu.',
@@ -65,7 +65,7 @@ return [
         'source' => 'Laskar Pelangi',
         'lang' => 'id',
         'genre' => 'wise',
-        'meaning' => 'Mendorong untuk tetap memiliki harapan meskipun keadaan belum sesuai rencana.',
+        'meaning' => 'Mimpi itu tetap layak dipegang, bahkan waktu keadaan belum sesuai rencana.',
     ],
     [
         'text' => 'Aku ingin hidup seribu tahun lagi.',
@@ -73,7 +73,7 @@ return [
         'source' => 'Aku',
         'lang' => 'id',
         'genre' => 'wise',
-        'meaning' => 'Baris penutup puisi "Aku" yang mengungkapkan keinginan kuat untuk terus ada dan berkarya.',
+        'meaning' => 'Sekali hidup, rasanya memang ingin terus ada dan terus berkarya.',
     ],
     [
         'text' => 'Gantungkan cita-citamu setinggi langit.',
@@ -81,7 +81,7 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'formal',
-        'meaning' => 'Ajakan untuk menetapkan tujuan yang tinggi dan berani.',
+        'meaning' => 'Cita-cita yang tinggi itu memang pantas digantungkan setinggi langit.',
     ],
     [
         'text' => 'Bukan kiamat, cuma error. Ambil napas, lalu coba lagi.',
@@ -89,7 +89,7 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'humor',
-        'meaning' => 'Menenangkan pengguna bahwa error yang terjadi bukan masalah besar.',
+        'meaning' => 'Bukan kiamat kok, cuma error kecil yang kebetulan lewat.',
     ],
     [
         'text' => 'Errornya kecil, drama-nya aja yang gedean.',
@@ -97,6 +97,6 @@ return [
         'source' => null,
         'lang' => 'id',
         'genre' => 'humor',
-        'meaning' => 'Meredakan kesan bahwa error yang terjadi lebih serius dari kenyataannya.',
+        'meaning' => 'Errornya kecil — cuma dramanya saja yang kelihatan lebih besar dari aslinya.',
     ],
 ];
