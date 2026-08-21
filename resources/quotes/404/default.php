@@ -62,4 +62,12 @@ return [
         'genre' => 'wise',
         'meaning' => 'Berlari dari satu tempat, tersesat di tempat lain — kadang begitu saja jalannya hidup.',
     ],
+    [
+        'text' => 'Malu bertanya, sesat di jalan.',
+        'author' => 'Peribahasa Indonesia',
+        'source' => null,
+        'lang' => 'id',
+        'genre' => 'wise',
+        'meaning' => 'Kadang yang bikin tersesat bukan jalannya, tapi terlalu segan untuk bertanya arah.',
+    ],
 ];

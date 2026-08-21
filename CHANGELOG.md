@@ -63,7 +63,10 @@ project follows [Semantic Versioning](https://semver.org/).
   faint translucent wash of the status's own accent color layered on top
   (`ErrorPageComposer::hexToRgba()` + a flat-color `linear-gradient`), so
   the color-coding reads across the whole page background, not just the
-  sidebar.
+  sidebar. In dark mode, where there's no decorative image to layer onto,
+  the page background instead gets a soft black radial-gradient vignette
+  (transparent at the center, ~35% black at the edges) so the flat dark
+  background still reads as deliberate rather than a plain, uniform fill.
 - A mascot illustration in the sidebar for 403/404/419/429/500/503 — a
   small astronaut character matching each status's mood (shrugging for
   "not found," arms crossed for "access denied," crying for "server
@@ -182,6 +185,29 @@ project follows [Semantic Versioning](https://semver.org/).
   Indonesian-language coverage is thinner as a result: `general` now has
   only one verified `id` quote (Chairil Anwar), and 500/503 still have
   none.
+- Added a few more entries after the pass above: a well-known Indonesian
+  proverb for 404 ("Malu bertanya, sesat di jalan" — light and directly
+  on-theme, unlike the heavier literary/philosophical quotes elsewhere in
+  the library), plus three more for 419/500/general sourced by mining two
+  "best quotes" listicle articles (Liputan6, detik.com) for candidates and
+  independently re-verifying each one — treating the listicles only as a
+  discovery tool, never as the cited source. Of 8 candidates checked this
+  way, only 3 held up: two genuine Benjamin Franklin lines from Poor
+  Richard's Almanack ("You may delay, but time will not"; "Well done is
+  better than well said") and a Maya Angelou line corrected to its actual
+  wording from a 1983 interview (the popularly-circulated version —
+  "You will face many defeats in your life..." — is flagged as a misquote
+  on Goodreads; the real line is "You may encounter many defeats, but you
+  must not be defeated..."). The other 5 candidates were confirmed false
+  attributions on inspection, including a *second* fake Winston Churchill
+  line already known from the pass above appearing again in these
+  listicles, a C.S. Lewis line actually from a 1982 James Sherman book,
+  two different fake Oscar Wilde lines ("Be yourself; everyone else is
+  already taken" and "Always forgive your enemies..." — the Oscar Wilde
+  Society's own chairman called the first one "definitely not Oscar"),
+  and an unsourced Michael Jordan line — reinforcing why mainstream news
+  aggregator listicles are treated as leads to verify, never as citable
+  sources on their own.
 - `oops.locale` and `oops.quote_languages` are unified into a single
   `oops.lang` (`OOPS_LANG` via `.env`) — one language now drives *both*
   the page's copy and its quote pool. Previously the two were

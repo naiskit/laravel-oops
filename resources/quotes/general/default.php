@@ -54,4 +54,12 @@ return [
         'genre' => 'wise',
         'meaning' => 'Sekali hidup, rasanya memang ingin terus ada dan terus berkarya.',
     ],
+    [
+        'text' => 'Well done is better than well said.',
+        'author' => 'Benjamin Franklin',
+        'source' => 'Poor Richard\'s Almanack (1737)',
+        'lang' => 'en',
+        'genre' => 'wise',
+        'meaning' => 'The doing tends to speak for itself, eventually.',
+    ],
 ];

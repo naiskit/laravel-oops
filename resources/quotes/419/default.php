@@ -65,4 +65,12 @@ return [
         'genre' => 'wise',
         'meaning' => 'Waktu yang berlalu itu fana — tapi apa yang sempat dirangkai di dalamnya, terasa abadi.',
     ],
+    [
+        'text' => 'You may delay, but time will not.',
+        'author' => 'Benjamin Franklin',
+        'source' => 'Poor Richard\'s Almanack',
+        'lang' => 'en',
+        'genre' => 'wise',
+        'meaning' => 'Whatever\'s being put off, the clock keeps going either way.',
+    ],
 ];

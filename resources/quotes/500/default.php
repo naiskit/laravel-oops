@@ -87,4 +87,12 @@ return [
         'genre' => 'wise',
         'meaning' => 'For every bit of trouble in the world, there\'s usually just as much quiet work undoing it.',
     ],
+    [
+        'text' => 'You may encounter many defeats, but you must not be defeated. In fact, it may be necessary to encounter the defeats, so you can know who you are, what you can rise from, how you can still come out of it.',
+        'author' => 'Maya Angelou',
+        'source' => 'interview with Claudia Tate, in Black Women Writers at Work (1983)',
+        'lang' => 'en',
+        'genre' => 'wise',
+        'meaning' => 'Meeting defeat is sometimes exactly how you find out what you\'re made of.',
+    ],
 ];

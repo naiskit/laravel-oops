@@ -62,8 +62,11 @@
                     {!! $vars($colorsDark) !!}
                 }
 
-                {{-- The decorative background is light-mode only; drop it once the OS switches to dark. --}}
-                body { background-image: none; }
+                {{-- The decorative image is light-mode only; once the OS
+                     switches to dark, swap it for a soft dark vignette
+                     instead, so the flat background still reads as
+                     deliberate rather than blending flatly into the card. --}}
+                body { background-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.35) 100%); }
             }
         @endif
 
@@ -85,6 +88,11 @@
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;
+            @elseif ($themeMode === 'dark')
+                {{-- No decorative image in dark mode — a soft dark vignette
+                     instead, so the card reads as sitting in the page
+                     rather than pasted on a flat, uniform background. --}}
+                background-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.35) 100%);
             @endif
             color: var(--text);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
