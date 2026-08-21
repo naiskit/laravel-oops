@@ -94,11 +94,16 @@ comes from `config('oops.theme')` via
 seven files, and each status stays free to differ only in icon or,
 eventually, its own layout entirely.
 
-The card itself is a two-column grid: a left sidebar holds the icon/logo
-badge and the status code as a large number, visually separating "this is
-an error page" from the title/insight/quote/support/button in the body
-column next to it. Below 560px wide the sidebar collapses above the body
-instead of squeezing into a second column.
+The card itself is a two-column grid: a left sidebar — filled solid with
+the status's own accent color, white icon and code on top — holds the
+icon/logo badge and the status code as a large number, making it read as
+an error page at a glance instead of blending into the body column next to
+it (title/insight/quote/support/button). Below 560px wide the sidebar
+collapses into a band above the body instead of squeezing into a second
+column. The sidebar's fill always uses the *light-mode* accent value even
+when the card itself is in dark mode — that color is already saturated
+enough to hold white text; the dark-mode accent is a lighter tint meant
+for text/borders on a dark page, not as a solid fill.
 
 Publishing (`--tag=oops-views`) copies the whole folder — including
 `layout.blade.php` — so you can edit any single status view, or add a
@@ -146,7 +151,20 @@ Quotes live under [`resources/quotes/`](resources/quotes/), **one folder
 per status code** (`404/`, `403/`, `419/`, `429/`, `500/`, `503/`,
 `general/`), so the tone fits the situation — lost-and-wandering quotes for
 404, forbidden-door quotes for 403, patience/slow-down quotes for 429, and
-so on. Anything without its own group falls back to `general/`.
+so on. Anything without its own group falls back to `general/`. A few
+quotes are deliberately duplicated across two folders when they genuinely
+fit both situations (e.g. Marcus Aurelius on obstacles, in both 429 and
+500).
+
+Every bundled quote is checked against a primary source — a book, essay,
+speech, or poem — with the author and source cited on each entry; no
+quote-aggregator filler and no `'author' => 'Anonymous'`. A handful of
+widely-circulated "famous" quotes (a Churchill line, a Twain line, two
+lines misattributed to Confucius) turned out to be confirmed
+misattributions and were left out rather than repeated — see
+`CHANGELOG.md` for specifics. `oops.quote_genres` filtering by `humor`
+returns fewer results than before as a result: verified, well-sourced
+humor turned out to be the hardest kind of quote to find.
 
 ```
 resources/quotes/

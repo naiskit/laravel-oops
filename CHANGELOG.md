@@ -85,20 +85,54 @@ project follows [Semantic Versioning](https://semver.org/).
   to better fill the sidebar column; `oops.theme.logo.width`/`height`
   default from 56 to 76 to match. Only affects installs that never
   configured a logo size of their own.
+- The sidebar is now a solid block filled with the status's own accent
+  color (white icon/code/label on top) instead of matching the page
+  background — reads as an error page at a glance rather than a neutral
+  info card. Widened from 190px to 240px and the status-code number grew
+  from 40px to 64px to carry the bolder treatment. The fill always uses
+  the *light*-mode accent value, even in dark mode, since that color is
+  saturated enough to hold white text — the dark-mode accent is a lighter
+  tint meant for text/borders on a dark page, not a solid fill.
 - Rewrote every bundled quote's `meaning` line: previously written as a
   third-person explanation of the quote ("Suggests that...", "Menjelaskan
   bahwa...") — now a short reflection extending the quote's own thought,
   not annotating it from the outside. Wording-only; the `meaning` field's
   shape and behavior are unchanged.
+- Re-curated the entire bundled quote library (all 7 status folders) down
+  to 51 entries, each checked against a primary source (book, essay,
+  speech, or poem) with the author and source cited. Several previously
+  bundled "famous" quotes turned out to be confirmed misattributions and
+  were dropped rather than repeated: "Success is not final, failure is not
+  fatal..." (not Churchill — the International Churchill Society lists it
+  as a false attribution), "The secret of getting ahead is getting
+  started" (not Twain — origin untraceable), "Our greatest glory is not in
+  never falling..." (not Confucius — traced to Oliver Goldsmith),
+  "It does not matter how slowly you go..." (not Confucius — no verified
+  source), "You are braver than you believe..." (not A.A. Milne — written
+  by Carter Crocker for a 1997 Disney film), "By failing to prepare, you
+  are preparing to fail" (not Benjamin Franklin — earliest known use is
+  1919), and "Every wall is a door" (not a verified Emerson line — the
+  closest sourced original is "every wall is a gate," now used instead).
+  New additions include verified lines from Marcus Aurelius, Seneca,
+  Tolstoy, Viktor Frankl, Nelson Mandela, Rumi, Herman Melville, Chairil
+  Anwar, Pramoedya Ananta Toer, Sapardi Djoko Damono, and Ahmad Fuadi,
+  among others. Indonesian-language coverage stays uneven across
+  statuses (403/404/419/429/general each have one or more verified `id`
+  quotes; 500/503 currently have none) — well-sourced Indonesian quotes
+  fitting "server failure" or "under maintenance" specifically proved hard
+  to find without resorting to unattributed internet quote collections,
+  which the sourcing standard above rules out.
 
 ### Removed
 
 - `oops.ui.{locale}.quote_lead` config key — superseded by `insight` above.
-- Seven bundled Indonesian "formal" quotes (403/404/419/429/500/503) that
-  were just the status's own error notice restated in officialese and
-  attributed to "Anonymous" — not real quotes from any real source. The
-  `formal` genre pool for those statuses is empty in Indonesian until real
-  quotes replace them; the `wise`/`humor` pools are unaffected.
+- Every `'author' => 'Anonymous'` quote, plus the "Peribahasa Indonesia" /
+  "Pepatah Programmer" / "Pepatah Internet" placeholder-author entries —
+  none of these trace to a real, citable source. Some status/genre/language
+  combinations (mainly `genre: humor` outside 403/404/419) now return an
+  empty pool rather than a quote — verified, well-sourced humor proved to
+  be the hardest kind of quote to find. The view already handles an empty
+  pool gracefully (no quote block renders); nothing else changes.
 
 ## [1.0.0] - 2026-08-20
 

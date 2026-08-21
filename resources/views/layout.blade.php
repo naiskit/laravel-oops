@@ -24,20 +24,32 @@
             $vars = fn (array $c) => "--bg:{$c['bg']};--card:{$c['card']};--text:{$c['text']};--muted:{$c['muted']};--border:{$c['border']};--accent:{$c['accent']};";
         @endphp
 
+        {{--
+            --side-bg always comes from the *light* accent, regardless of
+            the active mode — that value is already a saturated, dark-enough
+            color for white text on top of it. The dark-mode accent is a
+            lighter pastel meant for text/borders on a dark page background,
+            which wouldn't hold contrast as a solid fill behind white text.
+            This keeps the sidebar band a consistent brand color whether the
+            rest of the card is in light or dark mode.
+        --}}
         @if ($themeMode === 'dark')
             :root {
                 color-scheme: dark;
                 {!! $vars($colorsDark) !!}
+                --side-bg: {{ $colorsLight['accent'] }};
             }
         @elseif ($themeMode === 'light')
             :root {
                 color-scheme: light;
                 {!! $vars($colorsLight) !!}
+                --side-bg: {{ $colorsLight['accent'] }};
             }
         @else
             :root {
                 color-scheme: light dark;
                 {!! $vars($colorsLight) !!}
+                --side-bg: {{ $colorsLight['accent'] }};
             }
 
             @media (prefers-color-scheme: dark) {
@@ -73,13 +85,13 @@
 
         .grid {
             display: grid;
-            grid-template-columns: 190px 1fr;
+            grid-template-columns: 240px 1fr;
         }
 
         .side {
-            background: var(--bg);
-            border-right: 1px solid var(--border);
-            padding: 40px 20px;
+            background: var(--side-bg);
+            color: #ffffff;
+            padding: 48px 28px;
             display: flex;
             flex-direction: column;
         }
@@ -95,22 +107,22 @@
         }
 
         .icon-badge {
-            width: 76px;
-            height: 76px;
-            border-radius: 18px;
+            width: 84px;
+            height: 84px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--card);
-            border: 1px solid var(--border);
-            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 24px;
             overflow: hidden;
         }
 
         .icon-badge svg {
-            width: 38px;
-            height: 38px;
-            stroke: var(--accent);
+            width: 42px;
+            height: 42px;
+            stroke: #ffffff;
             fill: none;
             stroke-width: 1.6;
             stroke-linecap: round;
@@ -121,24 +133,24 @@
             display: block;
             max-width: 100%;
             height: auto;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .code-big {
-            font-size: 40px;
+            font-size: 64px;
             font-weight: 800;
-            color: var(--accent);
+            color: #ffffff;
             line-height: 1;
             letter-spacing: -0.02em;
         }
 
         .code-label {
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: var(--muted);
-            margin-top: 6px;
+            color: rgba(255, 255, 255, 0.75);
+            margin-top: 8px;
         }
 
         .body {
@@ -236,11 +248,9 @@
             }
 
             .side {
-                border-right: none;
-                border-bottom: 1px solid var(--border);
                 align-items: center;
                 text-align: center;
-                padding: 32px 24px;
+                padding: 36px 24px;
             }
 
             .body {

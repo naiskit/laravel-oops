@@ -42,7 +42,7 @@ class FileQuoteRepositoryTest extends TestCase
 
     public function test_it_filters_by_genre(): void
     {
-        $pool = $this->repository()->forStatus(500, [], ['humor']);
+        $pool = $this->repository()->forStatus(404, [], ['humor']);
 
         $this->assertNotEmpty($pool);
 
