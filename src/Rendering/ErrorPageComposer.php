@@ -77,6 +77,7 @@ class ErrorPageComposer
                 'lang' => $lang,
                 'backHomeLabel' => config("oops.ui.{$lang}.back_home") ?? config('oops.ui.id.back_home'),
                 'unknownAuthorLabel' => config("oops.ui.{$lang}.unknown_author") ?? config('oops.ui.id.unknown_author'),
+                'quoteLeadLabel' => config("oops.ui.{$lang}.quote_lead") ?? config('oops.ui.id.quote_lead'),
                 'quote' => $this->resolveQuote($status, $lang),
                 ...$this->resolveTheme($view),
             ],

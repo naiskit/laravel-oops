@@ -152,10 +152,12 @@ return [
         'id' => [
             'back_home' => 'Kembali ke Beranda',
             'unknown_author' => 'Anonim',
+            'quote_lead' => 'Sedikit bekal untuk kamu bawa.',
         ],
         'en' => [
             'back_home' => 'Back to Home',
             'unknown_author' => 'Unknown',
+            'quote_lead' => 'A little something to take with you.',
         ],
     ],
 

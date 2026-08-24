@@ -241,6 +241,13 @@
             margin: 0 0 32px;
         }
 
+        p.quote-lead {
+            margin: 0 0 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
         blockquote {
             margin: 0 0 32px;
             padding: 2px 0 2px 20px;
@@ -357,6 +364,7 @@
                 @endif
 
                 @if (! empty($quote))
+                    <p class="quote-lead">{{ $quoteLeadLabel }}</p>
                     <blockquote>
                         <p class="quote-text">&ldquo;{{ $quote['text'] }}&rdquo;</p>
                         <cite>&mdash; {{ $quote['author'] ?? $unknownAuthorLabel }}@if (! empty($quote['source'])), {{ $quote['source'] }}@endif</cite>
