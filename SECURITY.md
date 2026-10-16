@@ -8,14 +8,14 @@ There is no long-term support for older major versions.
 ## What This Package Touches
 
 `laravel-oops` renders a Blade view in place of Laravel's default error
-page for a configured set of HTTP status codes. It reads `config('oops.*')`
-and a list of quotes from local PHP files; it does not accept user input,
+page for a configured set of HTTP status codes. It reads `config('oops.*')`,
+and its lang files; it does not accept user input,
 make outbound network calls, or store data anywhere. The main risk surface
 worth reporting on is:
 
 - The rendered page unintentionally exposing exception details (messages,
   stack traces, file paths) that should stay server-side.
-- The published config/quotes/views mechanism being usable to include
+- The published config/views/lang mechanism being usable to include
   arbitrary files outside the intended directories.
 
 ## Reporting a Vulnerability

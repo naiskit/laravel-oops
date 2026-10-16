@@ -45,6 +45,6 @@ class PreviewCommandTest extends TestCase
         $path = storage_path('app/oops-preview-500.html');
 
         $this->assertFileExists($path);
-        $this->assertStringContainsString('Ada yang Salah di Server', file_get_contents($path));
+        $this->assertStringContainsString('Kesalahan Server', file_get_contents($path));
     }
 }

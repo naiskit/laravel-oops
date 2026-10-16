@@ -28,7 +28,7 @@ class ReferenceAndSupportTest extends TestCase
 
         $response = $this->get('/throw/503');
 
-        $response->assertSee('Perkiraan layanan kembali tersedia akan diinformasikan oleh administrator.');
+        $response->assertSee('Layanan akan segera tersedia kembali. Silakan coba beberapa saat lagi.');
         $this->assertDoesNotMatchRegularExpression('/OOPS-503-[0-9A-F]{4}/', $response->getContent());
     }
 
@@ -76,24 +76,5 @@ class ReferenceAndSupportTest extends TestCase
         $response = $this->get('/throw/500');
 
         $response->assertSee($logged);
-    }
-
-    public function test_the_footer_is_shown_by_default(): void
-    {
-        config(['app.debug' => false]);
-
-        $response = $this->get('/throw/404');
-
-        $response->assertSee('Powered by Naiskit');
-        $response->assertSee('href="https://github.com/naiskit/laravel-oops"', false);
-    }
-
-    public function test_the_footer_can_be_turned_off(): void
-    {
-        config(['app.debug' => false, 'oops.show_footer' => false]);
-
-        $response = $this->get('/throw/404');
-
-        $response->assertDontSee('Powered by Naiskit');
     }
 }

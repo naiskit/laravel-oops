@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\ValidationException;
 use Naiskit\LaravelOops\Console\PreviewCommand;
-use Naiskit\LaravelOops\Console\QuoteCommand;
-use Naiskit\LaravelOops\Quotes\FileQuoteRepository;
-use Naiskit\LaravelOops\Quotes\QuoteRepository;
 use Naiskit\LaravelOops\Rendering\ErrorPageComposer;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -19,25 +16,23 @@ use Throwable;
 
 class LaravelOopsServiceProvider extends ServiceProvider
 {
+    /**
+     * HTTP status codes this package intercepts. Anything that isn't an
+     * HttpException (e.g. a random uncaught error) counts as 500.
+     */
+    public const STATUSES = [403, 404, 419, 429, 500, 503];
+
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/oops.php', 'oops');
 
-        $this->app->singleton(QuoteRepository::class, function ($app) {
-            return new FileQuoteRepository(
-                $app['config']->get('oops.quotes_path'),
-                __DIR__.'/../resources/quotes/index.php'
-            );
-        });
-
-        $this->app->singleton(ErrorPageComposer::class, function ($app) {
-            return new ErrorPageComposer($app, $app->make(QuoteRepository::class));
-        });
+        $this->app->singleton(ErrorPageComposer::class);
     }
 
     public function boot(): void
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'oops');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'oops');
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -45,28 +40,21 @@ class LaravelOopsServiceProvider extends ServiceProvider
             ], 'oops-config');
 
             $this->publishes([
-                __DIR__.'/../resources/quotes' => resource_path('quotes/oops'),
-            ], 'oops-quotes');
-
-            $this->publishes([
                 __DIR__.'/../resources/views' => resource_path('views/vendor/oops'),
             ], 'oops-views');
 
-            $this->commands([QuoteCommand::class, PreviewCommand::class]);
+            $this->publishes([
+                __DIR__.'/../resources/lang' => $this->app->langPath('vendor/oops'),
+            ], 'oops-lang');
+
+            $this->commands([PreviewCommand::class]);
         }
 
-        $this->registerExceptionRenderer();
-    }
-
-    protected function registerExceptionRenderer(): void
-    {
-        if (! config('oops.enabled')) {
-            return;
+        if (config('oops.enabled')) {
+            $this->app->make(ExceptionHandler::class)->renderable(
+                fn (Throwable $e, $request) => $this->renderOopsPage($e, $request)
+            );
         }
-
-        $this->app->make(ExceptionHandler::class)->renderable(
-            fn (Throwable $e, $request) => $this->renderOopsPage($e, $request)
-        );
     }
 
     protected function renderOopsPage(Throwable $e, $request): ?Response
@@ -77,11 +65,9 @@ class LaravelOopsServiceProvider extends ServiceProvider
 
         $status = $e instanceof HttpExceptionInterface ? $e->getStatusCode() : 500;
 
-        if (! in_array($status, config('oops.statuses', []), true)) {
-            return null;
-        }
-
-        if (config('app.debug') && ! config('oops.force')) {
+        // APP_DEBUG keeps Laravel's own detailed error page; use
+        // `php artisan oops:preview` to look at this page locally.
+        if (! in_array($status, self::STATUSES, true) || config('app.debug')) {
             return null;
         }
 

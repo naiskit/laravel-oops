@@ -6,19 +6,26 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/naiskit/laravel-oops.svg?style=flat-square)](https://packagist.org/packages/naiskit/laravel-oops)
 [![License](https://img.shields.io/packagist/l/naiskit/laravel-oops.svg?style=flat-square)](LICENSE.md)
 
-A friendly Laravel error page package that makes unexpected errors a little
-less frustrating — with a random quote (matched to the kind of error) to
-keep users company while things get fixed.
+Friendly, calm error pages for Laravel, in the tone that fits your app.
 
-## Preview
+Two themes are bundled. Both show the error code, the error title, the
+tone content, a "Home" and a "Back" button, and the page URL (without
+query string) so you can tell which app an error came from.
 
-![All 6 default status pages — 403, 404, 419, 429, 500, and 503 — each with its own icon and accent color](docs/screenshoot/preview-1.png)
+- **`default`**: an open two-column layout with an illustration made for
+  each status (magnifier for 404, shield for 403, hourglass for 419,
+  speedometer for 429, server alert for 500, maintenance cone for 503).
+  Each status has its own color that hints at whose side the problem is
+  on: blues for issues the visitor can act on (403/404/419), amber for
+  "slow down" (429), rose for "something broke on our side" (500), teal
+  for planned maintenance (503). Soft blue-grey background with a faint
+  dot pattern and waves tinted in the status color.
+- **`astronaut`**: the original laravel-oops look. A card with a
+  color-coded side panel holding an astronaut mascot for each status and
+  the big status code.
 
-![Theme config in action: forced dark mode and a custom accent color](docs/screenshoot/preview-2.png)
-
-Every card above is a real render of the package's own views. See
-[Theme](#theme) for colors, dark mode, and logo, and
-[Previewing the page](#previewing-the-page) to render any status locally.
+Both stack on small screens. Run `composer serve` in this repo to see
+them.
 
 ## Requirements
 
@@ -31,281 +38,118 @@ Every card above is a real render of the package's own views. See
 composer require naiskit/laravel-oops
 ```
 
-The service provider is auto-discovered — no wiring needed. As soon as it's
-installed, unhandled 403 / 404 / 419 / 429 / 500 / 503 responses (when
-`APP_DEBUG=false` and the request expects HTML) get the friendly page
-automatically.
+That's it. The service provider is auto-discovered. When `APP_DEBUG=false`,
+unhandled 403 / 404 / 419 / 429 / 500 / 503 responses for HTML requests get
+the friendly page.
 
-### (Optional) Publish
+## Configuration
+
+Five settings, all via `.env`:
+
+```dotenv
+OOPS_ENABLED=true     # false = use Laravel's own error pages
+OOPS_THEME=default    # default | astronaut | your own
+OOPS_TONE=formal      # formal | casual | fun | wise | brief | technical | your own
+OOPS_LANG=en          # en | id
+OOPS_POWERED_BY=true  # false = hide "Powered by Naiskit" in the footer
+```
+
+| Setting | Default | Notes |
+|---|---|---|
+| `OOPS_ENABLED` | `true` | Turn off to fall back to Laravel's default error pages. |
+| `OOPS_THEME` | `default` | The page design: `default`, `astronaut`, or [your own](#your-own-theme). An unknown value falls back to `default`. |
+| `OOPS_TONE` | `formal` | The wording below the error title (the design stays the same). A bundled tone or [your own](#your-own-tone). An unknown value falls back to `formal`. |
+| `OOPS_LANG` | `en` | `en` or `id`. An unknown value falls back to `en`. |
+| `OOPS_POWERED_BY` | `true` | Shows "Powered by Naiskit" (linking to github.com/naiskit) at the bottom of the page. Set to `false` to hide it. |
+
+### Tones
+
+Every page reads top to bottom as: the **error code** ("Error 404"), the
+**error title** ("Page Not Found"), then the **tone content**: the
+message, the support line, and the button labels. The error code and
+title are the same for every tone, so what went wrong is always stated
+plainly; the tone only changes the content below them:
+
+| Tone | Wording |
+|---|---|
+| `formal` | Polite and soft. "We're sorry, the page you are looking for could not be found." / "Mohon maaf, halaman yang Anda tuju tidak dapat kami temukan." |
+| `casual` | Relaxed and everyday. "The page you're looking for may have moved, or never existed." / "Halaman yang kamu cari sepertinya sudah pindah…" |
+| `fun` | Playful. "Oops, you're lost! This page is playing hide-and-seek…" / "Waduh, kamu nyasar! Halaman ini lagi main petak umpet…" |
+| `wise` | Calm and reflective, opens with a short quote. "Not all those who wander are lost." (Tolkien) / "Malu bertanya, sesat di jalan." (peribahasa) |
+| `brief` | Short and to the point, one sentence. "This page is not available." / "Halaman tidak tersedia." Suits internal tools and dashboards. |
+| `technical` | What the status means and what to check, for admin panels used by IT or developers. "No route or resource matches this URL." / "Tidak ada route atau resource yang cocok dengan URL ini." Never shows exception details; for 500 it points to the reference code in the log. |
+
+### Your own tone
+
+Every file in `tones/` is a tone. To add one, drop a file into your app:
+
+```php
+// lang/vendor/oops/id/tones/kantor.php  →  OOPS_TONE=kantor
+return [
+    'statuses' => [
+        404 => [
+            'quote' => ['text' => '…', 'author' => '…'],   // optional
+            'message' => 'Halaman ini tidak tersedia.',
+            'support' => 'Hubungi tim IT di ext. 123.',
+        ],
+        // 403, 419, 429, 500, 503 …
+    ],
+    'default' => ['message' => '…', 'support' => '… {ref}'],
+    'back_home' => '…',
+    'go_back' => '…',
+];
+```
+
+It only needs the keys it changes; everything else comes from `formal`.
+Add one file per language you use (`en`, `id`). `{ref}` in `support`
+becomes the reference code. Tone names are plain slugs (`a-z`, `0-9`,
+`-`, `_`).
+
+### Your own theme
+
+A theme is one Blade view. To add one, drop it into your app at
+`resources/views/vendor/oops/themes/{name}.blade.php` and set
+`OOPS_THEME={name}`. Copying a bundled theme is the easiest start:
 
 ```bash
-# config/oops.php — enable/disable, status list, per-status copy
-php artisan vendor:publish --tag=oops-config
-
-# resources/quotes/oops/ — your own quote folders (one folder per status)
-php artisan vendor:publish --tag=oops-quotes
-
-# resources/views/vendor/oops/ — one Blade view per status code
-php artisan vendor:publish --tag=oops-views
+php artisan vendor:publish --tag=oops-views   # resources/views/vendor/oops/themes/
 ```
+
+The view gets `$code`, `$title`, `$message`, `$support`, `$quote`
+(`text`, `author`, or null), `$reference`, `$url`, `$lang`, `$labels`
+(`error_label`, `back_home`, `go_back`), and `$colors` (`accent`, `soft`,
+`strong`). Theme names are plain slugs (`a-z`, `0-9`, `-`, `_`).
+
+There are no other settings: no light/dark mode, colors, or layout
+options.
 
 ## How it works
 
 The package registers a `renderable()` callback on Laravel's exception
 handler. It only steps in when:
 
-- the exception's status code is in `oops.statuses` (default: `403, 404,
-  419, 429, 500, 503`; anything not an `HttpException` — e.g. a random
-  uncaught error — is treated as `500`),
+- the status is 403, 404, 419, 429, 500, or 503 (anything that isn't an
+  `HttpException` counts as 500),
 - the request does **not** expect JSON,
-- `APP_DEBUG` is off (or `oops.force` is `true`),
-- and nothing else (your own app code, another package) has already
-  handled the exception.
+- `APP_DEBUG` is off,
+- and nothing else (your own app code, another package) already handled
+  the exception.
 
 Auth redirects (`AuthenticationException`), validation errors
 (`ValidationException`), and `HttpResponseException` are always left alone.
 
-## A view per error, not one shared template
+## Reference code
 
-Each status code has its own Blade view — [`404.blade.php`](resources/views/404.blade.php),
-[`403.blade.php`](resources/views/403.blade.php), and so on — with its own
-icon, resolved automatically as `oops::{status}` and falling back to
-[`general.blade.php`](resources/views/general.blade.php) for any status
-without a dedicated file:
-
-| Status | Motif | Default accent |
-|---|---|---|
-| 404 | compass | violet |
-| 403 | padlock | rose |
-| 419 | clock | amber |
-| 429 | pause | teal |
-| 500 | alert | red |
-| 503 | crescent moon | slate |
-| *(fallback)* | dot | zinc |
-
-They all `@include('oops::layout', ['icon' => '<svg markup>'])` — a shared
-partial that owns the page chrome (head, CSS, card structure) *and* theme
-resolution, the same pattern Laravel itself uses for its own
-`resources/views/errors/*.blade.php`. A status view only ever declares its
-icon; everything visual beyond that — colors, dark mode, an optional logo —
-comes from `config('oops.theme')` via
-`Naiskit\LaravelOops\Rendering\ErrorPageComposer` (see
-[Theme](#theme) below), so a style tweak doesn't need repeating across
-seven files, and each status stays free to differ only in icon or,
-eventually, its own layout entirely.
-
-The card itself is a two-column grid: a left sidebar — a soft, pale tint
-of the status's own accent color, with the code number in the
-full-strength accent on top — holds a mascot/logo/icon and the status
-code as a large number, making it read as an error page at a glance
-instead of blending into the body column next to it
-(title/insight/quote/support/button). See [Theme](#theme) for the mascot
-illustrations, colors, dark mode, and logo. Below 560px wide the sidebar
-collapses into a band above the body instead of squeezing into a second
-column. Both the tint and its text color always derive from the
-*light-mode* accent value, even when the card itself is in dark mode —
-mixing the dark-mode pastel accent toward white would wash out
-inconsistently per status, so the light accent is used as the base
-regardless of the active mode.
-
-Publishing (`--tag=oops-views`) copies the whole folder — including
-`layout.blade.php` — so you can edit any single status view, or add a
-`{code}.blade.php` for a status not covered by default, without touching
-the rest. To force one view for every status instead, set `oops.view` in
-config to a view name — note that also switches which status's default
-accent applies (see [Theme](#theme)).
-
-## Insight — a line the quote doesn't have to carry alone
-
-The quote below is picked at random from a pool, so it won't always land
-perfectly for the situation. Each status also gets a short, **fixed** line —
-calm and reflective rather than apologetic — shown right under the title and
-before the quote. `message` still exists in config (and is passed to the
-view, for anyone overriding it) but isn't rendered by the built-in views
-anymore, since it tended to just restate `insight` in plainer words:
-
-> *Tidak semua jalan menuju ke tempat yang kita duga, tapi setiap perjalanan mengajarkan sesuatu.*
-
-Unlike the quote, this line is guaranteed to fit — it's written specifically
-for that status, not drawn from a pool. It lives right alongside `title` and
-`message` in `config('oops.messages.{lang}.{status}')` as a third key,
-`insight`, so it's locale-aware the same way:
-
-```php
-'messages' => [
-    'id' => [
-        404 => [
-            'title' => 'Halaman Tidak Ditemukan',
-            'message' => '...',
-            'insight' => 'Tidak semua jalan menuju ke tempat yang kita duga, tapi setiap perjalanan mengajarkan sesuatu.',
-        ],
-    ],
-],
-```
-
-It's optional — leave `insight` out of a status (or the whole array, if
-you override `messages` yourself) and that line simply doesn't render.
-Falls back to `default_message.{lang}.insight` for any status not listed,
-same as `title`/`message`.
-
-## Quotes matched to the error
-
-Quotes live under [`resources/quotes/`](resources/quotes/), **one folder
-per status code** (`404/`, `403/`, `419/`, `429/`, `500/`, `503/`,
-`general/`), so the tone fits the situation — lost-and-wandering quotes for
-404, forbidden-door quotes for 403, patience/slow-down quotes for 429, and
-so on. Anything without its own group falls back to `general/`. A few
-quotes are deliberately duplicated across two folders when they genuinely
-fit both situations (e.g. Marcus Aurelius on obstacles, in both 429 and
-500).
-
-Every bundled quote is checked against a primary source — a book, essay,
-speech, or poem — with the author and source cited on each entry; no
-quote-aggregator filler and no `'author' => 'Anonymous'`. A handful of
-widely-circulated "famous" quotes (a Churchill line, a Twain line, two
-lines misattributed to Confucius) turned out to be confirmed
-misattributions and were left out rather than repeated — see
-`CHANGELOG.md` for specifics. `oops.quote_genres` filtering by `humor`
-returns fewer results than before as a result: verified, well-sourced
-humor turned out to be the hardest kind of quote to find.
-
-```
-resources/quotes/
-├── index.php        ← loads every *.php file in each folder below, no editing needed
-├── 404/
-│   └── default.php
-├── 403/
-│   └── default.php
-├── ...
-└── general/
-    └── default.php
-```
-
-```php
-// resources/quotes/404/default.php
-return [
-    [
-        'text' => 'Not all those who wander are lost.',
-        'author' => 'J.R.R. Tolkien',
-        'source' => 'The Fellowship of the Ring',
-        'lang' => 'en',
-        'genre' => 'wise',
-        'meaning' => 'Not having a fixed destination isn\'t the same as being lost.',
-    ],
-    // ...
-];
-```
-
-`meaning` is an optional short line that extends the quote's own thought —
-written as a passing reflection, not an explanation of what the quote
-"means" — shown under the quote on the error page (below a thin divider)
-when present. Leave it out (or `null`) to skip that line for a given quote.
-
-Publishing (`--tag=oops-quotes`) copies the whole tree to
-`resources/quotes/oops/` in your app — the exact path `config('oops.quotes_path')`
-already points at by default, so no further config is needed. To add more
-quotes, **just drop a new file into the matching folder** — e.g.
-`resources/quotes/oops/403/source1.php` returning its own array of quote
-entries — `index.php` picks it up automatically, no editing required.
-
-Each quote also carries `lang` (`id`/`en`) and `genre` (`wise`, `humor`,
-`formal`, or any label you invent). The language isn't independently
-configurable — a quote only ever shows in the same language as the rest
-of the page (see [Language](#language) below): an `id` page draws only
-from `id` quotes, an `en` page only from `en` ones, on principle, not just
-by default. If a status has no quote in the resolved language, the page
-simply skips the quote block rather than showing one in the wrong
-language. `genre` is still its own filter:
-
-```php
-'quote_genres' => ['humor'], // [] = all genres
-```
-
-or via `.env`:
-
-```
-OOPS_QUOTE_GENRES=humor,wise
-```
-
-If a status code's quote pool has nothing matching the configured genre,
-the filter relaxes to ignore genre (language is never relaxed).
-
-This is a deliberately simple starting point — plain files are easy to grow
-by hand for now. Publish with `--tag=oops-quotes` to maintain your own list
-without touching the package. A future version can swap in a richer source
-(a bigger curated set, an API, etc.) by implementing
-`Naiskit\LaravelOops\Quotes\QuoteRepository` and rebinding it in the
-container — the rest of the package (the exception hook, the view) doesn't
-need to change.
-
-Preview a quote for a given status, language, and genre from the CLI:
-
-```bash
-php artisan oops:quote 404
-php artisan oops:quote 500 --lang=id --genre=humor
-```
-
-## Support line & reference code
-
-Below the quote, each status can show a short, practical line telling the
-visitor what to do next — contact an administrator, wait it out, try again.
-It's the `support` key alongside `title`/`message`/`insight` in
-`config('oops.messages.{lang}.{status}')`:
-
-```php
-'messages' => [
-    'id' => [
-        500 => [
-            'title' => 'Ada yang Salah di Server',
-            // ...
-            'support' => 'Jika masalah masih terjadi, hubungi administrator dengan menyertakan kode referensi berikut: {ref}',
-        ],
-    ],
-],
-```
-
-The literal token `{ref}` gets replaced with a short reference code unique to
-that render — e.g. `OOPS-500-A82F` — so a visitor can hand that code to
-whoever's on the other end. Every render also logs a line carrying the same
-code alongside the real exception and its stack trace:
+Pages for 5xx errors (and any status without its own copy) show a short
+reference code, e.g. `OOPS-500-A82F`. Every render also logs a line with
+the same code next to the real exception:
 
 ```
 [OOPS-500-A82F] RuntimeException: Call to undefined method ...
 ```
 
-so a reported code can be traced straight back to what actually happened —
-`5xx` statuses log at `error`, everything else (`403`/`404`/`419`/`429` —
-expected, user-driven outcomes rather than bugs) logs at `warning`.
-
-Not every status needs `{ref}` — a 503 you're already aware of (a
-maintenance window, say) doesn't need one, so its `support` copy can just
-skip the token:
-
-```php
-503 => [
-    // ...
-    'support' => 'Perkiraan layanan kembali tersedia akan diinformasikan oleh administrator.',
-],
-```
-
-`support` is optional the same way `insight` is — leave it out and the line
-doesn't render, no code is shown (a reference is still generated and logged
-either way, in case you want it for your own purposes via `$reference` on a
-custom view). Falls back to `default_message.{lang}.support` for any
-status not listed.
-
-## Footer
-
-A small "Powered by Naiskit" line, linking back to this repo, sits under
-the button by default. Turn it off for a fully white-labeled page:
-
-```php
-'show_footer' => false,
-```
-
-```
-OOPS_SHOW_FOOTER=false
-```
+so a code a visitor reports can be traced back to the matching log entry.
+5xx logs at `error`; 403/404/419/429 log at `warning`.
 
 ## Previewing the page
 
@@ -314,192 +158,40 @@ php artisan oops:preview        # defaults to 404
 php artisan oops:preview 500
 ```
 
-This renders the exact same view + data the exception handler would use for
-that status — via the shared `Naiskit\LaravelOops\Rendering\ErrorPageComposer`
-— and saves it to `storage/app/oops-preview-{status}.html`. Open that file in
-a browser. Unlike triggering a real error, this works regardless of
-`APP_DEBUG` or `oops.force`, so there's no need to toggle either just to look
-at the page.
+Saves the exact page the exception handler would render to
+`storage/app/oops-preview-{status}.html`. Works regardless of `APP_DEBUG`.
 
-## Language
+## Customizing (optional)
 
-`config('oops.lang')` is the single setting driving *everything* on the
-page in one language — title, insight, support line, "Back to Home"
-button, and the quote (including which quote pool it's drawn from, per
-[Quotes matched to the error](#quotes-matched-to-the-error) above).
-`oops.lang` defaults to `null`, which means: follow the app's own
-`config('app.locale')`, falling back to Indonesian if that locale isn't
-one of the ones translated in `config('oops.messages')` (currently `id`
-and `en`).
-
-```php
-'lang' => env('OOPS_LANG'), // null = follow app.locale, falls back to "id"
+```bash
+php artisan vendor:publish --tag=oops-config  # config/oops.php
+php artisan vendor:publish --tag=oops-lang    # lang/vendor/oops/{en,id}/: errors.php (error titles), tones/{tone}.php (tone content)
+php artisan vendor:publish --tag=oops-views   # resources/views/vendor/oops/themes/ (change a theme or add your own)
 ```
 
-Force one language regardless of the app's locale via `.env`:
-
-```
-OOPS_LANG=en
-```
-
-`ui` holds the small labels that aren't per-status: `back_home` (the
-button) and `unknown_author` (fallback when a quote has no `author`).
-
-Add another language by adding a new key under `messages`, `default_message`,
-and `ui` in `config/oops.php` (e.g. `'fr' => [...]`), then set `OOPS_LANG=fr`
-or switch the app's own locale to `fr` — and add matching `fr` quotes under
-`resources/quotes/` if you want the quote pool to actually have anything to
-draw from, since quotes are strictly filtered to the same language.
-
-## Theme
-
-By default the page follows the visitor's own OS/browser light-or-dark
-setting (`prefers-color-scheme`), each status using its own accent color
-(see the table in [A view per error](#a-view-per-error-not-one-shared-template)
-above). All of that is configurable via `config('oops.theme')`.
-
-**Force light or dark mode**, ignoring the visitor's own preference:
-
-```php
-'theme' => [
-    'mode' => 'dark', // "system" (default), "light", or "dark"
-],
-```
-
-```
-OOPS_THEME_MODE=dark
-```
-
-**Override any color token**, per light/dark scheme. Leave a value `null`
-to keep the built-in default for that token — `accent` is the one most
-worth knowing about: setting it overrides *every* status's own accent with
-one color of your choosing, instead of each status keeping compass/padlock/etc.
-in its own hue:
-
-```php
-'theme' => [
-    'colors' => [
-        'light' => ['bg' => null, 'card' => null, 'text' => null, 'muted' => null, 'border' => null, 'accent' => '#2563eb'],
-        'dark' => ['bg' => null, 'card' => null, 'text' => null, 'muted' => null, 'border' => null, 'accent' => '#60a5fa'],
-    ],
-],
-```
-
-Each token also has an `.env` variable (`OOPS_COLOR_LIGHT_BG`,
-`OOPS_COLOR_LIGHT_ACCENT`, `OOPS_COLOR_DARK_BG`, etc.) — see
-[`config/oops.php`](config/oops.php) for the full list.
-
-**Show a logo instead of the built-in icon** — accepts anything a browser
-can load: `asset()`, `Storage::url()`, or a full URL. The badge renders at
-exactly `width`×`height`, so a wide wordmark logo isn't squished into a
-square the way the built-in icon is — set both to match your logo's own
-aspect ratio (e.g. a 784×241 logo might use `width: 160, height: 49`):
-
-```php
-'theme' => [
-    'logo' => [
-        'url' => asset('images/logo.png'),
-        'width' => 76,
-        'height' => 76,
-    ],
-],
-```
-
-```
-OOPS_LOGO_URL=https://example.com/logo.png
-OOPS_LOGO_WIDTH=76
-OOPS_LOGO_HEIGHT=76
-```
-
-**The sidebar mascot** — 403, 404, 419, 429, 500, and 503 each ship with a
-small illustrated character matching that status's mood (a shrugging
-astronaut for "not found," arms crossed for "access denied," and so on —
-see `resources/assets/mascot-{status}.png`), taking over the sidebar's
-icon slot whenever no logo is configured (a logo always wins, same as it
-does over the plain icon). The plain icon itself never disappears — it
-also appears in its own small badge next to the title in the body column,
-regardless of what the sidebar is showing. `oops::general` has no mascot
-of its own. Turn the mascot off to have the sidebar fall back to the
-plain icon too:
-
-```php
-'theme' => [
-    'mascot' => false,
-],
-```
-
-```
-OOPS_THEME_MASCOT=false
-```
-
-**Left-align the sidebar contents** instead of the default centered
-layout — the icon/logo badge and the large status code both follow this
-alignment; the body column (title, insight, quote, support, button) is
-unaffected either way:
-
-```php
-'theme' => [
-    'icon_align' => 'left', // "center" (default) or "left"
-],
-```
-
-```
-OOPS_ICON_ALIGN=left
-```
-
-**Turn off the background image** — by default, a soft decorative image
-(`resources/assets/bg-light.jpg`) covers the page behind the card. It's
-inlined as a data URI, so it renders with zero extra requests and no
-publish step, and it only shows in light mode — a forced or OS-triggered
-dark mode reverts to a flat color automatically:
-
-```php
-'theme' => [
-    'background_image' => false,
-],
-```
-
-```
-OOPS_BACKGROUND_IMAGE=false
-```
-
-The background image also carries a faint wash of the status's own accent
-color on top of it (a translucent `linear-gradient` layered over the
-image), so the color-coding reads across the whole page, not just the
-sidebar strip — turning the image off turns this off too, since there's
-nothing left to layer it onto.
-
-## Configuration
-
-See [`config/oops.php`](config/oops.php) for all options: turning the
-package off, forcing it on even with `APP_DEBUG=true`, which status codes
-to intercept, the title/message/insight/support copy per status code and
-language, the quote genre filter, the theme (light/dark mode, colors,
-logo, mascot, icon alignment), and the footer.
-
-## Disabling in tests
-
-Set `OOPS_ENABLED=false` in `phpunit.xml` (or your test `.env`) so
-assertions against real error responses (e.g. `$response->assertStatus(404)`)
-aren't affected by the friendly view.
+A published lang file only needs the keys you want to change. The rest
+still comes from the package.
 
 ## Testing
-
-This is the package's own test suite (Orchestra Testbench + PHPUnit), for
-anyone working on `laravel-oops` itself rather than just using it. CI runs
-it across PHP 8.2–8.4 and Laravel 11/12/13:
 
 ```bash
 composer install
 composer test        # PHPUnit
-composer format       # Laravel Pint (code style)
-composer analyse      # PHPStan / Larastan
+composer format      # Laravel Pint
+composer analyse     # PHPStan / Larastan
+composer serve       # playground at http://127.0.0.1:8000, every theme × status × tone × language
 ```
 
-`tests/Feature/SecurityTest.php` specifically guards against exception
-details (messages, stack traces, file paths) ever reaching the rendered
-page — see [CONTRIBUTING.md](CONTRIBUTING.md) if you're touching anything
-near exception rendering.
+`composer serve` runs the package in a throwaway Laravel app (Orchestra
+Testbench) with `APP_DEBUG=false`, so each page goes through the real
+exception handler. Defaults come from [`testbench.yaml`](testbench.yaml);
+`?theme=`, `?tone=` and `?lang=` override them per request, e.g.
+`/500?theme=astronaut&tone=casual&lang=id`.
+
+`tests/Feature/SecurityTest.php` guards against exception details
+(messages, stack traces, file paths) ever reaching the rendered page. See
+[CONTRIBUTING.md](CONTRIBUTING.md) if you're touching anything near
+exception rendering.
 
 ## Contributing
 
@@ -507,7 +199,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Security Vulnerabilities
 
-Please don't open a public issue for security vulnerabilities — see
+Please don't open a public issue for security vulnerabilities. See
 [SECURITY.md](SECURITY.md) for how to report one.
 
 ## Credits

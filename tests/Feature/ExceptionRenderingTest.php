@@ -43,19 +43,6 @@ class ExceptionRenderingTest extends TestCase
         $response->assertSee('Kembali ke Beranda');
     }
 
-    public function test_it_uses_the_dedicated_view_per_status(): void
-    {
-        config(['app.debug' => false]);
-
-        $response403 = $this->get('/throw/403');
-        $response500 = $this->get('/throw/500');
-
-        // Each status view uses its own accent color, so the rendered
-        // <style> block differs even though they share the same layout.
-        $response403->assertSee('#be123c', false);
-        $response500->assertSee('#dc2626', false);
-    }
-
     public function test_it_renders_a_friendly_page_for_a_generic_uncaught_exception(): void
     {
         config(['app.debug' => false]);
@@ -63,17 +50,17 @@ class ExceptionRenderingTest extends TestCase
         $response = $this->get('/throw-generic');
 
         $response->assertStatus(500);
-        $response->assertSee('Ada yang Salah di Server');
+        $response->assertSee('Kesalahan Server');
     }
 
-    public function test_it_falls_back_to_the_general_view_for_an_unlisted_status(): void
+    public function test_it_leaves_an_unlisted_status_to_laravel(): void
     {
-        config(['app.debug' => false, 'oops.statuses' => [404, 418]]);
+        config(['app.debug' => false]);
 
         $response = $this->get('/throw/418');
 
         $response->assertStatus(418);
-        $response->assertSee('Terjadi Kesalahan');
+        $response->assertDontSee('Kembali ke Beranda');
     }
 
     public function test_it_does_not_intercept_json_requests(): void
@@ -113,22 +100,12 @@ class ExceptionRenderingTest extends TestCase
 
     public function test_it_is_disabled_when_app_debug_is_true(): void
     {
-        config(['app.debug' => true, 'oops.force' => false]);
+        config(['app.debug' => true]);
 
         $response = $this->get('/throw/404');
 
         $response->assertStatus(404);
         $response->assertDontSee('Kembali ke Beranda');
-    }
-
-    public function test_it_can_be_forced_even_when_app_debug_is_true(): void
-    {
-        config(['app.debug' => true, 'oops.force' => true]);
-
-        $response = $this->get('/throw/404');
-
-        $response->assertStatus(404);
-        $response->assertSee('Kembali ke Beranda');
     }
 
     public function test_it_leaves_authentication_exceptions_alone(): void
@@ -143,31 +120,17 @@ class ExceptionRenderingTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    public function test_oops_force_env_var_is_parsed_correctly(): void
+    public function test_oops_tone_env_var_is_read(): void
     {
-        // Unlike the config()-array tests above, this exercises the real
-        // env('OOPS_FORCE', false) parsing path — .env values are always
-        // strings, so this proves "true" is actually cast to a boolean.
-        putenv('OOPS_FORCE=true');
+        putenv('OOPS_TONE=casual');
         $this->refreshApplication();
-        config(['app.debug' => true]);
-
-        $response = $this->get('/throw/404');
-
-        $response->assertStatus(404);
-        $response->assertSee('Kembali ke Beranda');
-
-        putenv('OOPS_FORCE');
-    }
-
-    public function test_it_does_not_render_the_message_line_since_the_insight_line_already_covers_it(): void
-    {
         config(['app.debug' => false]);
 
         $response = $this->get('/throw/404');
 
-        $response->assertDontSee('class="message"', false);
-        $response->assertDontSee('Halaman yang kamu cari sepertinya sudah pindah, atau memang tidak pernah ada.');
+        $response->assertSee('Halaman yang kamu cari sepertinya sudah pindah, atau memang tidak pernah ada.');
+
+        putenv('OOPS_TONE');
     }
 
     public function test_it_can_be_disabled_entirely(): void

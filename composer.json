@@ -6,8 +6,7 @@
         "error page",
         "exception handler",
         "404",
-        "500",
-        "quotes"
+        "500"
     ],
     "homepage": "https://github.com/naiskit/laravel-oops",
     "license": "MIT",
@@ -53,7 +52,11 @@
     "scripts": {
         "test": "phpunit",
         "format": "pint",
-        "analyse": "phpstan analyse --memory-limit=512M"
+        "analyse": "phpstan analyse --memory-limit=512M",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php vendor/bin/testbench serve"
+        ]
     },
     "config": {
         "sort-packages": true

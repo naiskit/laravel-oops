@@ -10,3 +10,5 @@
 /phpunit.xml.dist export-ignore
 /pint.json export-ignore
 /phpstan.neon export-ignore
+/testbench.yaml export-ignore
+/workbench export-ignore

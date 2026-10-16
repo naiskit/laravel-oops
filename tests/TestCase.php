@@ -16,9 +16,8 @@ abstract class TestCase extends Orchestra
 
     protected function getEnvironmentSetUp($app): void
     {
-        // Most tests only care about behavior unrelated to language, so pin
-        // a predictable default here. LocaleResolutionTest overrides this
-        // per test to exercise the actual id/en resolution logic.
+        // Most tests assert Indonesian copy; LangResolutionTest covers the
+        // actual "en" default and fallback.
         $app['config']->set('oops.lang', 'id');
 
         // Every rendered error page now logs a reference line — keep the

@@ -12,28 +12,14 @@ class PublishedOverridesTest extends TestCase
         $router->get('/throw/{status}', fn (int $status) => abort($status));
     }
 
-    public function test_a_published_quotes_path_is_used_over_the_bundled_one(): void
-    {
-        config([
-            'app.debug' => false,
-            'oops.quotes_path' => __DIR__.'/../Fixtures/custom-quotes.php',
-            // The fixture quote is lang "en".
-            'oops.lang' => 'en',
-        ]);
-
-        $response = $this->get('/throw/404');
-
-        $response->assertSee('Custom quote for testing.');
-    }
-
     public function test_a_published_view_takes_precedence_over_the_bundled_one(): void
     {
         config(['app.debug' => false]);
 
         $files = new Filesystem;
         $publishedDir = $this->app->resourcePath('views/vendor/oops');
-        $files->ensureDirectoryExists($publishedDir);
-        $files->put($publishedDir.'/404.blade.php', 'Published override for 404.');
+        $files->ensureDirectoryExists($publishedDir.'/themes');
+        $files->put($publishedDir.'/themes/default.blade.php', 'Published override for {{ $code }}.');
 
         try {
             $response = $this->get('/throw/404');
@@ -48,16 +34,23 @@ class PublishedOverridesTest extends TestCase
         }
     }
 
-    public function test_oops_view_config_forces_a_single_view_for_every_status(): void
+    public function test_published_lang_copy_overrides_the_bundled_copy(): void
     {
-        config(['app.debug' => false, 'oops.view' => 'oops::general']);
+        config(['app.debug' => false]);
 
-        $response = $this->get('/throw/404');
+        $files = new Filesystem;
+        $publishedDir = $this->app->langPath('vendor/oops/id');
+        $files->ensureDirectoryExists($publishedDir);
+        $files->put($publishedDir.'/errors.php', "<?php return ['statuses' => [404 => 'Judul Kustom']];");
 
-        // "general" uses a zinc accent (#52525b), not 404's own violet
-        // (#6d28d9) — proves the forced view really is used instead of
-        // the status-specific one.
-        $response->assertSee('#52525b', false);
-        $response->assertDontSee('#6d28d9', false);
+        try {
+            $response = $this->get('/throw/404');
+
+            $response->assertSee('Judul Kustom');
+            // Keys not overridden still come from the bundled file.
+            $response->assertSee('Kembali ke Beranda');
+        } finally {
+            $files->deleteDirectory($this->app->langPath('vendor'));
+        }
     }
 }

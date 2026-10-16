@@ -1,0 +1,23 @@
+# Local playground for previewing the error pages from this repo:
+#   composer serve   →   http://127.0.0.1:8000
+laravel: '@testbench'
+
+providers:
+  - Naiskit\LaravelOops\LaravelOopsServiceProvider
+
+env:
+  # Local-only key for the playground (sessions/cookies); not a secret.
+  - APP_KEY="base64:lKKaDmQdH5CJjVLux96UfimhobGOiZbJ8ItV/pwC9N8="
+  - APP_ENV=local
+  # The friendly page only shows when debug is off.
+  - APP_DEBUG=false
+  - OOPS_ENABLED=true
+  - OOPS_THEME=default
+  - OOPS_TONE=formal
+  - OOPS_LANG=en
+  - OOPS_POWERED_BY=true
+
+workbench:
+  start: '/'
+  discovers:
+    web: true

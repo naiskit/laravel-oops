@@ -4,7 +4,52 @@ All notable changes to `laravel-oops` are documented here. The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this
 project follows [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [2.0.0] - 2026-10-16
+
+### Changed (breaking)
+
+- Configuration reduced to five `.env` settings: `OOPS_ENABLED`,
+  `OOPS_THEME`, `OOPS_TONE`, `OOPS_LANG`, and `OOPS_POWERED_BY` (shows
+  "Powered by Naiskit" in the footer, on by default). All other options are gone.
+- New `OOPS_THEME` setting picks the page design. `default` is a new
+  open two-column layout with an illustration per status and a color per
+  status that hints at whose side the problem is on, on a soft blue-grey
+  background with a faint dot pattern and status-tinted waves.
+  `astronaut` is the original look (card, color-coded side panel,
+  astronaut mascots). Both have "Home" and "Back" buttons, a highlighted
+  reference code, and the page URL (without query string) as an origin
+  marker. A theme is one view, `resources/views/themes/{theme}.blade.php`;
+  apps add their own in `resources/views/vendor/oops/themes/`.
+- New `OOPS_TONE` setting picks only the tone content (message, support
+  line, button labels): `formal` (default, polite and soft), `casual`
+  (relaxed, everyday), `fun` (playful), `wise` (calm, opens with a
+  quote, in the character of the old quote library), `brief` (one short
+  sentence), or `technical` (what the status means and what to check, for
+  IT and developers). Apps add their own by
+  dropping `lang/vendor/oops/{lang}/tones/{name}.php`; a custom tone only
+  needs the keys it changes, the rest comes from `formal`. The error code and error title
+  are the same for every tone (`resources/lang/{en,id}/errors.php`).
+- `OOPS_LANG` is `en` (default) or `id`; it no longer follows
+  `app.locale`.
+- Page copy moved from `config/oops.php` into lang files
+  (`resources/lang/{en,id}/tones/{tone}.php`), publishable with `--tag=oops-lang`.
+
+### Removed
+
+- `OOPS_FORCE`, `oops.statuses`, `oops.view`, `oops.messages`,
+  `oops.default_message`, `oops.ui`, `oops.quotes_path`,
+  `OOPS_QUOTE_GENRES`, every `OOPS_THEME_*` / `OOPS_COLOR_*` / `OOPS_LOGO_*`
+  variable, `OOPS_ICON_ALIGN`, `OOPS_BACKGROUND_IMAGE`, and
+  `OOPS_SHOW_FOOTER`.
+- Light/dark mode: each theme has exactly one look, regardless of the
+  visitor's OS theme. The old `oops.theme` (light/dark/auto plus colors)
+  is replaced by `OOPS_THEME`, which picks a design.
+- The random quote library (`resources/quotes/`), per-status views, the
+  "insight" line, and the custom logo/icon option. Quotes live on as the
+  fixed, per-status quotes of the `wise` tone.
+- The `oops:quote` command, the `QuoteRepository` contract,
+  `--tag=oops-quotes` publishing, quote genres, and session-based
+  "no repeat" quote tracking.
 
 ### Added
 
